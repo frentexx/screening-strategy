@@ -284,6 +284,20 @@
     </div>
 
     <script type="module">
+        // -------------------------------------------------------------------------
+        // (*** 新增 ***) 部署到 GitHub Pages 的重要提醒：
+        // 
+        // 1. 將此 index.html 檔案上傳到您的 GitHub Repository (例如 'screening-app')。
+        // 2. 在 Repository 的 Settings -> Pages 中啟用 GitHub Pages。
+        // 3. 您會得到一個網址，例如：https://[your-username].github.io/screening-app/
+        // 4. (最重要!) 請前往您的 Firebase 專案 (screening-strategy) 控制台：
+        //    Authentication -> Settings -> 已授權的網域
+        // 5. 點擊「新增網域」，然後輸入您的 GitHub Pages 網域
+        //    (例如：[your-username].github.io)
+        // 6. 如果不執行步驟 5，Google 登入將會因為 'auth/unauthorized-domain' 錯誤而失敗。
+        // -------------------------------------------------------------------------
+
+
         // (*** 修改 ***) 載入 v9 模組化函式 (包含 Google Auth)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { 
@@ -430,7 +444,7 @@
                 // (*** 新增 ***) 偵測 auth/unauthorized-domain
                 if (error.code === 'auth/unauthorized-domain') {
                     loginErrorEl.textContent = '錯誤：此網域未被 Firebase 授權。';
-                    alert('登入失敗：此應用程式的網域 (..scf.usercontent.goog) 未被加入到 Firebase 專案的「授權網域」清單中。請聯繫管理者處理。');
+                    alert('登入失敗：此應用程式的網域 (..scf.usercontent.goog 或您的 GitHub 網域) 未被加入到 Firebase 專案的「授權網域」清單中。請聯繫管理者處理。');
                 }
                 else if (error.code === 'auth/popup-closed-by-user') {
                     loginErrorEl.textContent = '登入視窗已關閉。';
@@ -1014,6 +1028,7 @@
 
                     const leftValStr = String(leftVal).toLowerCase();
                     const rightValStr = String(rightVal).toLowerCase();
+_GAPS ...
                     const leftValNum = parseFloat(leftVal);
                     const rightValNum = parseFloat(rightVal);
                     const isNumeric = !isNaN(leftValNum) && !isNaN(rightValNum);
@@ -1354,4 +1369,5 @@
 
 </body>
 </html>
+"
 
