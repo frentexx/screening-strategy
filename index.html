@@ -441,13 +441,14 @@
             } catch (error) {
                 console.error("Google 登入失敗:", error);
                 
-                // (*** 新增 ***) 偵測 auth/unauthorized-domain
+                // (*** 修正 ***) 偵測 auth/unauthorized-domain，並動態顯示當前網域
                 if (error.code === 'auth/unauthorized-domain') {
+                    const currentDomain = window.location.hostname; // 取得當前網域
                     loginErrorEl.textContent = '錯誤：此網域未被 Firebase 授權。';
-                    alert('登入失敗：此應用程式的網域 (..scf.usercontent.goog 或您的 GitHub 網域) 未被加入到 Firebase 專案的「授權網域」清單中。請聯繫管理者處理。');
+                    alert(`登入失敗：您目前的網域 (${currentDomain}) 未被加入到 Firebase 專案的「授權網域」清單中。\n\n請前往 Firebase 控制台 > Authentication > Settings > 已授權的網域，並新增此網域。`);
                 }
                 else if (error.code === 'auth/popup-closed-by-user') {
-                    loginErrorEl.textContent = '登入視窗已關閉。';
+                    loginErrorEl.textContent = '登入窗已關閉。';
                 } else if (error.code === 'auth/cancelled-popup-request') {
                     // 忽略
                 } else if (error.code === 'auth/operation-not-allowed') {
@@ -1028,7 +1029,7 @@
 
                     const leftValStr = String(leftVal).toLowerCase();
                     const rightValStr = String(rightVal).toLowerCase();
-_GAPS ...
+                    // (*** 修正 ***) 移除 _GAPS ...
                     const leftValNum = parseFloat(leftVal);
                     const rightValNum = parseFloat(rightVal);
                     const isNumeric = !isNaN(leftValNum) && !isNaN(rightValNum);
@@ -1369,5 +1370,4 @@ _GAPS ...
 
 </body>
 </html>
-"
 
