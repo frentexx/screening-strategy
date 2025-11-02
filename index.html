@@ -1087,6 +1087,9 @@
                 
                 // 1. 更新並保存篩選器
                 saveFilters();
+                
+                // (*** 新增 ***) 偵錯日誌
+                console.log("正在套用討論區篩選:", forumFilters);
 
                 // 2. (*** 修改 ***) 取得快取
                 const allPosts = postsCache;
@@ -1143,6 +1146,9 @@
                     return true;
                 });
                 
+                // (*** 新增 ***) 偵錯日誌
+                console.log(`篩選出 ${filteredDocs.length} / ${allPosts.length} 篇帖子`);
+
                 // 4. 渲染結果
                 renderPostList(filteredDocs);
             }
@@ -1975,7 +1981,8 @@
                             case 'gt':
                                 return isNumeric ? leftValNum > val1Num : leftValStr > val1Str;
                             case 'lt':
-                                return isNumeric ? leftValNum < val1Num : leftValStr < valExamples;
+                                // (*** 偵錯修正 ***) valExamples -> val1Str
+                                return isNumeric ? leftValNum < val1Num : leftValStr < val1Str;
                             case 'gte':
                                 return isNumeric ? leftValNum >= val1Num : leftValStr >= val1Str;
                             case 'lte':
