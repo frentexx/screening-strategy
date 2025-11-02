@@ -1,4 +1,3 @@
-選策略:index.html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -176,6 +175,47 @@
         .hidden-strict {
             display: none !important;
         }
+
+        /* (*** 新增 ***) 討論區樣式 */
+        .post-item {
+            border: 1px solid #E5E7EB; /* gray-200 */
+            border-radius: 12px;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            transition: all 0.3s ease;
+        }
+        .post-item:hover {
+            border-color: #3DB2FF;
+            box-shadow: 0 4px 10px rgba(61,178,255,0.1);
+        }
+        .post-title-link {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600;
+            color: #1E40AF; /* blue-800 */
+            cursor: pointer;
+        }
+        .post-title-link:hover {
+            text-decoration: underline;
+        }
+        .post-meta {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+        }
+        
+        .reply-item {
+            border-top: 1px solid #E5E7EB; /* gray-200 */
+            padding-top: 1rem;
+        }
+        .reply-item:first-child {
+            border-top: none;
+        }
+        
+        /* 簡單的 Markdown 換行樣式 */
+        .post-content {
+            white-space: pre-wrap; /* 保持換行和空格 */
+            word-wrap: break-word; /* 長單字換行 */
+        }
+        
     </style>
 </head>
 <body>
@@ -206,8 +246,8 @@
             <button id="logout-btn" class="absolute top-0 right-0 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">登出</button>
         </header>
 
-        <!-- 主要內容區 (改為白底卡片) -->
-        <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
+        <!-- (*** 修改 ***) 主要應用程式視圖 (包含篩選器和論壇列表) -->
+        <main id="main-app-view" class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
 
             <!-- (修改) 檔案上傳區，加入 ID -->
             <section id="upload-section" class="mb-6">
@@ -281,7 +321,79 @@
                 </div>
             </section>
 
+            <!-- (*** 新增 ***) 討論區列表區塊 -->
+            <section id="forum-section" class="mt-8 pt-8 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-gray-800">💬 討論區</h2>
+                    <button id="show-new-post-form-btn" class="btn-add rounded-xl py-2 px-4 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -ml-1 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        發表新帖
+                    </button>
+                </div>
+                <div id="post-list-container" class="space-y-4">
+                    <p class="text-gray-500">正在載入帖子...</p>
+                    <!-- 帖子列表將由 JS 動態插入 -->
+                </div>
+            </section>
+
         </main>
+        
+        <!-- (*** 新增 ***) 新增帖子表單視圖 (預設隱藏) -->
+        <div id="new-post-form-view" class="hidden">
+            <button id="back-to-main-btn-1" class="mb-4 text-blue-600 hover:underline font-medium">&larr; 返回列表</button>
+            <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">發表新帖子</h2>
+                <form id="new-post-form">
+                    <div class="mb-4">
+                        <label for="post-title" class="block text-sm font-medium text-gray-700 mb-1">標題</label>
+                        <input type="text" id="post-title" required class="w-full p-3 form-input-style" placeholder="請輸入問題或主題標題...">
+                    </div>
+                    <div class="mb-6">
+                        <label for="post-content" class="block text-sm font-medium text-gray-700 mb-1">內容</label>
+                        <textarea id="post-content" rows="10" required class="w-full p-3 form-input-style" placeholder="請詳細描述您的問題..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-4">
+                        <button type="button" id="cancel-post-btn" class_name="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">取消</button>
+                        <button type="submit" id="submit-post-btn" class="btn-upload rounded-xl py-2 px-6">
+                            <span id="submit-post-spinner" class="hidden">...</span>
+                            <span>發佈</span>
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+        
+        <!-- (*** 新增 ***) 帖子詳情視圖 (預設隱藏) -->
+        <div id="forum-detail-view" class="hidden">
+            <button id="back-to-main-btn-2" class="mb-4 text-blue-600 hover:underline font-medium">&larr; 返回列表</button>
+            <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
+                <!-- 帖子內容將由 JS 載入 -->
+                <div id="post-detail-content" class="mb-8 pb-8 border-b border-gray-200">
+                    <p class="text-gray-500">正在載入帖子內容...</p>
+                </div>
+
+                <!-- 回覆列表 -->
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">所有回覆</h3>
+                <div id="replies-list-container" class="space-y-5 mb-8">
+                    <p class="text-gray-500">正在載入回覆...</p>
+                </div>
+
+                <!-- 回覆表單 -->
+                <form id="new-reply-form" class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">發表您的回覆</h3>
+                    <textarea id="reply-content" rows="4" required class="w-full p-3 form-input-style mb-3" placeholder="請輸入您的回覆..."></textarea>
+                    <div class="flex justify-end">
+                        <button type="submit" id="submit-reply-btn" class="btn-add rounded-xl py-2 px-4">
+                            <span id="submit-reply-spinner" class="hidden">...</span>
+                            <span>送出回覆</span>
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+
     </div>
 
     <script type="module">
@@ -299,7 +411,7 @@
         // -------------------------------------------------------------------------
 
 
-        // (*** 修改 ***) 載入 v9 模組化函式 (包含 Google Auth)
+        // (*** 修改 ***) 載入 v9 模組化函式 (包含 Google Auth 和 討論區功能)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { 
             getAuth, 
@@ -313,7 +425,14 @@
             doc, 
             setDoc, 
             onSnapshot, 
-            setLogLevel 
+            setLogLevel,
+            collection,    // (*** 新增 ***)
+            addDoc,        // (*** 新增 ***)
+            serverTimestamp, // (*** 新增 ***)
+            query,         // (*** 新增 ***)
+            orderBy,       // (*** 新增 ***)
+            getDoc,        // (*** 新增 ***)
+            deleteDoc      // (*** 新增 ***)
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
@@ -330,6 +449,11 @@
             const uploadSectionEl = document.getElementById('upload-section');
             const userDisplayEl = document.getElementById('user-display'); // (*** 新增 ***)
 
+            // (*** 新增 ***) 視圖切換 DOM 元素
+            const mainAppViewEl = document.getElementById('main-app-view');
+            const newPostFormViewEl = document.getElementById('new-post-form-view');
+            const forumDetailViewEl = document.getElementById('forum-detail-view');
+
             // (既有) DOM 元素
             const fileInputEl = document.getElementById('file-input');
             const fileNameEl = document.getElementById('file-name');
@@ -341,6 +465,26 @@
             const addFilterBtnEl = document.getElementById('add-filter-btn');
             const clearFiltersBtnEl = document.getElementById('clear-filters-btn');
             const filterChipsContainerEl = document.getElementById('filter-chips-container');
+            
+            // (*** 新增 ***) 討論區 DOM 元素
+            const showNewPostFormBtn = document.getElementById('show-new-post-form-btn');
+            const postListContainerEl = document.getElementById('post-list-container');
+            // 發帖表單
+            const newPostFormEl = document.getElementById('new-post-form');
+            const postTitleEl = document.getElementById('post-title');
+            const postContentEl = document.getElementById('post-content');
+            const cancelPostBtn = document.getElementById('cancel-post-btn');
+            const submitPostBtn = document.getElementById('submit-post-btn');
+            // 詳情頁
+            const postDetailContentEl = document.getElementById('post-detail-content');
+            const repliesListContainerEl = document.getElementById('replies-list-container');
+            const newReplyFormEl = document.getElementById('new-reply-form');
+            const replyContentEl = document.getElementById('reply-content');
+            const submitReplyBtn = document.getElementById('submit-reply-btn');
+            // 返回按鈕
+            const backToMainBtn1 = document.getElementById('back-to-main-btn-1');
+            const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
+
 
             // 全域變數儲存資料
             let allHeaders = [];
@@ -354,6 +498,15 @@
             let userId = null;
             let schoolDataDocRef = null; // 指向公用資料的
             let unsubscribeData = null; // 用於取消監聽
+            
+            // (*** 新增 ***) 討論區 Firebase 變數
+            let forumPostsRef = null;
+            let unsubscribeForumPosts = null;
+            let unsubscribeReplies = null;
+            let currentPostId = null; // 追蹤當前查看的帖子 ID
+            let currentUserEmail = null;
+            let currentUserDisplayName = null;
+
 
             // 您提供的 Firebase 設定
             const firebaseConfig = {
@@ -369,6 +522,38 @@
             // (修改) 登入狀態
             let currentUserRole = null;
             
+            // (*** 新增 ***) 視圖管理器
+            function showView(viewId, context = null) {
+                // 隱藏所有視圖
+                mainAppViewEl.classList.add('hidden');
+                newPostFormViewEl.classList.add('hidden');
+                forumDetailViewEl.classList.add('hidden');
+
+                // 停止監聽回覆 (如果正在監聽)
+                if (unsubscribeReplies) {
+                    unsubscribeReplies();
+                    unsubscribeReplies = null;
+                }
+                currentPostId = null;
+
+                switch (viewId) {
+                    case 'new-post':
+                        newPostFormEl.reset(); // 清空表單
+                        newPostFormViewEl.classList.remove('hidden');
+                        break;
+                    case 'detail':
+                        forumDetailViewEl.classList.remove('hidden');
+                        currentPostId = context; // 儲存當前帖子 ID
+                        loadPostDetail(currentPostId); // 載入帖子內容
+                        break;
+                    case 'main':
+                    default:
+                        mainAppViewEl.classList.remove('hidden');
+                        break;
+                }
+                window.scrollTo(0, 0); // 切換視圖時滾動到頂部
+            }
+
             /**
              * (修改) 登入函式 (僅處理 UI 切換)
              * @param {string} role 'admin' 或 'user'
@@ -400,12 +585,26 @@
              */
             function handleLogout() {
                 currentUserRole = null;
+                currentUserEmail = null;
+                currentUserDisplayName = null;
 
                 // 停止監聽
                 if (unsubscribeData) {
                     unsubscribeData();
                     unsubscribeData = null;
                 }
+                // (*** 新增 ***) 停止監聽討論區
+                if (unsubscribeForumPosts) {
+                    unsubscribeForumPosts();
+                    unsubscribeForumPosts = null;
+                }
+                if (unsubscribeReplies) {
+                    unsubscribeReplies();
+                    unsubscribeReplies = null;
+                }
+
+                // (*** 新增 ***) 切換回主視圖
+                showView('main');
 
                 // 切換 UI
                 loginContainerEl.classList.remove('hidden');
@@ -419,6 +618,12 @@
                 exportButtonEl.classList.add('hidden');
                 currentExportData = null;
                 filterControlsEl.classList.add('hidden');
+                
+                // (*** 新增 ***) 清空討論區
+                postListContainerEl.innerHTML = '';
+                postDetailContentEl.innerHTML = '';
+                repliesListContainerEl.innerHTML = '';
+                
                 allHeaders = [];
                 allDataRows = [];
                 availableColumns = [];
@@ -472,7 +677,7 @@
             // (*** 新增 ***) Google 登入事件監聽
             googleLoginBtn.addEventListener('click', signInWithGoogle);
 
-            // (*** 修改 ***) 登出按鈕事件監聽
+            // (*** 修改 ***) D (*** 新增 ***) 登出按鈕事件監聽
             logoutBtn.addEventListener('click', async () => {
                 if (auth) {
                     await signOut(auth); // 觸發 onAuthStateChanged
@@ -493,7 +698,8 @@
 
                     // 簡化路徑
                     schoolDataDocRef = doc(db, 'public_data', 'school_data');
-
+                    // (*** 新增 ***) 討論區集合
+                    forumPostsRef = collection(db, 'forum_posts');
 
                     // (*** 修改 ***) 核心認證邏輯
                     onAuthStateChanged(auth, (user) => {
@@ -502,18 +708,24 @@
                             userId = user.uid;
                             const userEmail = user.email || '';
                             
+                            // (*** 新增 ***) 儲存使用者資訊
+                            currentUserEmail = userEmail;
+                            currentUserDisplayName = user.displayName || userEmail.split('@')[0];
+                            
                             // (*** 新增 ***) 檢查 Email 網域
                             if (userEmail === 'fuwen@ppsh.ptc.edu.tw') {
                                 // 管理者
                                 console.log("管理者登入:", userId, userEmail);
                                 handleLogin('admin', userEmail);
                                 listenForSchoolData(); // 登入成功後開始監聽
+                                listenForForumPosts(); // (*** 新增 ***) 監聽討論區
                             } 
                             else if (userEmail.endsWith('@ppsh.ptc.edu.tw')) {
                                 // 一般使用者
                                 console.log("一般使用者登入:", userId, userEmail);
                                 handleLogin('user', userEmail);
                                 listenForSchoolData(); // 登入成功後開始監聽
+                                listenForForumPosts(); // (*** 新增 ***) 監聽討論區
                             } 
                             else {
                                 // 網域不符
@@ -523,7 +735,7 @@
                             }
                             
                         } else {
-                            // 使用者已登入
+                            // 使用者已登B (*** 新增 ***) 出
                             userId = null;
                             console.log("使用者已登出");
                             handleLogout(); // 呼叫登出 UI
@@ -658,7 +870,297 @@
                 reader.readAsBinaryString(file);
             }
 
-            // --- (以下是篩選和 UI 邏輯，大部分不變) ---
+            // --- (*** 新增 ***) 討論區功能函式 ---
+
+            /**
+             * 格式化 Firebase Timestamp
+             */
+            function formatTimestamp(timestamp) {
+                if (!timestamp) return '時間不詳';
+                return timestamp.toDate().toLocaleString('zh-TW', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            /**
+             * 監聽討論區帖子列表
+             */
+            function listenForForumPosts() {
+                if (!forumPostsRef) return;
+                
+                // 防止重複監聽
+                if (unsubscribeForumPosts) {
+                    unsubscribeForumPosts();
+                }
+
+                const q = query(forumPostsRef, orderBy('createdAt', 'desc'));
+                unsubscribeForumPosts = onSnapshot(q, (snapshot) => {
+                    renderPostList(snapshot.docs);
+                }, (error) => {
+                    console.error("監聽帖子列表失敗:", error);
+                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}</p>`;
+                });
+            }
+
+            /**
+             * 渲染帖子列表
+             */
+            function renderPostList(docs) {
+                postListContainerEl.innerHTML = ''; // 清空
+                if (docs.length === 0) {
+                    postListContainerEl.innerHTML = '<p class="text-gray-500">目前沒有任何帖子，快來發表第一個吧！</p>';
+                    return;
+                }
+
+                docs.forEach(doc => {
+                    const post = doc.data();
+                    const postEl = document.createElement('div');
+                    postEl.className = 'post-item';
+                    
+                    postEl.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <a class="post-title-link">${post.title}</a>
+                            <!-- 暫時不顯示回覆數，先簡化
+                            <span class="text-sm text-gray-400">0 回覆</span>
+                            -->
+                        </div>
+                        <p class="post-meta">
+                            由 ${post.authorDisplayName || post.authorEmail} 發表於 ${formatTimestamp(post.createdAt)}
+                        </p>
+                    `;
+                    
+                    // 點擊標題進入詳情頁
+                    postEl.querySelector('.post-title-link').addEventListener('click', () => {
+                        handleShowPostDetail(doc.id);
+                    });
+                    
+                    postListContainerEl.appendChild(postEl);
+                });
+            }
+            
+            /**
+             * (*** 新增 ***) 處理：顯示帖子詳情
+             */
+            function handleShowPostDetail(postId) {
+                showView('detail', postId);
+            }
+
+            /**
+             * (*** 新增 ***) 載入單一帖子及其回覆
+             */
+            async function loadPostDetail(postId) {
+                // 1. 載入帖子主內容
+                postDetailContentEl.innerHTML = '<p class="text-gray-500">正在載入帖子內容...</p>';
+                try {
+                    const postRef = doc(db, 'forum_posts', postId);
+                    const docSnap = await getDoc(postRef);
+
+                    if (docSnap.exists()) {
+                        const post = docSnap.data();
+                        let deleteBtnHTML = '';
+                        if (currentUserRole === 'admin') {
+                            deleteBtnHTML = `<button id="delete-post-btn" class="text-red-500 hover:underline text-sm ml-4">刪除此帖</button>`;
+                        }
+                        
+                        postDetailContentEl.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h2 class="text-3xl font-bold text-gray-800 mb-2">${post.title}</h2>
+                                    <p class="post-meta mb-4">
+                                        由 ${post.authorDisplayName || post.authorEmail} 發表於 ${formatTimestamp(post.createdAt)}
+                                    </p>
+                                </div>
+                                ${deleteBtnHTML}
+                            </div>
+                            <div class="post-content text-gray-700 text-base leading-relaxed">
+                                ${post.content}
+                            </div>
+                        `;
+                        
+                        if (currentUserRole === 'admin') {
+                            document.getElementById('delete-post-btn').addEventListener('click', () => handleDeletePost(postId));
+                        }
+                    } else {
+                        postDetailContentEl.innerHTML = '<p class="text-red-500">錯誤：找不到這篇帖子。</p>';
+                    }
+                } catch (e) {
+                    console.error("載入帖子詳情失敗:", e);
+                    postDetailContentEl.innerHTML = `<p class="text-red-500">載入失敗：${e.message}</p>`;
+                }
+
+                // 2. 監聽回覆
+                repliesListContainerEl.innerHTML = '<p class="text-gray-500">正在載入回覆...</p>';
+                
+                // 停止上次的監聽
+                if (unsubscribeReplies) {
+                    unsubscribeReplies();
+                }
+
+                const repliesRef = collection(db, 'forum_posts', postId, 'replies');
+                const q = query(repliesRef, orderBy('createdAt', 'asc'));
+                
+                unsubscribeReplies = onSnapshot(q, (snapshot) => {
+                    renderReplies(snapshot.docs, postId);
+                }, (error) => {
+                    console.error("監聽回覆失敗:", error);
+                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}</p>`;
+                });
+            }
+            
+            /**
+             * (*** 新增 ***) 渲染回覆列表
+             */
+            function renderReplies(docs, postId) {
+                repliesListContainerEl.innerHTML = '';
+                if (docs.length === 0) {
+                    repliesListContainerEl.innerHTML = '<p class="text-gray-500">目前尚無回覆。</p>';
+                    return;
+                }
+                
+                docs.forEach(doc => {
+                    const reply = doc.data();
+                    const replyId = doc.id;
+                    const replyEl = document.createElement('div');
+                    replyEl.className = 'reply-item';
+                    
+                    let deleteBtnHTML = '';
+                    if (currentUserRole === 'admin') {
+                        deleteBtnHTML = `<button data-postid="${postId}" data-replyid="${replyId}" class="delete-reply-btn text-red-500 hover:underline text-xs ml-4">刪除</button>`;
+                    }
+                    
+                    replyEl.innerHTML = `
+                        <p class="post-content text-gray-700 mb-2">${reply.content}</p>
+                        <p class="post-meta">
+                            <strong>${reply.authorDisplayName || reply.authorEmail}</strong>
+                            <span> 回覆於 ${formatTimestamp(reply.createdAt)}</span>
+                            ${deleteBtnHTML}
+                        </p>
+                    `;
+                    repliesListContainerEl.appendChild(replyEl);
+                });
+                
+                // 綁定所有刪除回覆按鈕
+                repliesListContainerEl.querySelectorAll('.delete-reply-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        handleDeleteReply(e.currentTarget.dataset.postid, e.currentTarget.dataset.replyid);
+                    });
+                });
+            }
+
+            /**
+             * (*** 新增 ***) 處理：發表新帖子
+             */
+            async function handleCreatePost(event) {
+                event.preventDefault();
+                if (!forumPostsRef || !currentUserEmail) return;
+                
+                const title = postTitleEl.value.trim();
+                const content = postContentEl.value.trim();
+                if (!title || !content) {
+                    alert('標題和內容都不能為空！');
+                    return;
+                }
+                
+                submitPostBtn.disabled = true;
+                submitPostBtn.querySelector('span:not(.hidden)').textContent = '發佈中...';
+
+                try {
+                    await addDoc(forumPostsRef, {
+                        title: title,
+                        content: content,
+                        createdAt: serverTimestamp(),
+                        authorEmail: currentUserEmail,
+                        authorDisplayName: currentUserDisplayName,
+                        authorUid: userId
+                    });
+                    showView('main'); // 返回主列表
+                } catch (e) {
+                    console.error("發表帖子失敗:", e);
+                    alert(`發表失敗：${e.message}`);
+                } finally {
+                    submitPostBtn.disabled = false;
+                    submitPostBtn.querySelector('span:not(.hidden)').textContent = '發佈';
+                }
+            }
+            
+            /**
+             * (*** 新增 ***) 處理：發表新回覆
+             */
+            async function handleCreateReply(event) {
+                event.preventDefault();
+                if (!currentPostId || !currentUserEmail) return;
+                
+                const content = replyContentEl.value.trim();
+                if (!content) return;
+                
+                submitReplyBtn.disabled = true;
+                submitReplyBtn.querySelector('span:not(.hidden)').textContent = '送出中...';
+                
+                try {
+                    const repliesRef = collection(db, 'forum_posts', currentPostId, 'replies');
+                    await addDoc(repliesRef, {
+                        content: content,
+                        createdAt: serverTimestamp(),
+                        authorEmail: currentUserEmail,
+                        authorDisplayName: currentUserDisplayName,
+                        authorUid: userId
+                    });
+                    newReplyFormEl.reset(); // 清空回覆框
+                } catch (e) {
+                    console.error("發表回覆失敗:", e);
+                    alert(`回覆失敗：${e.message}`);
+                } finally {
+                    submitReplyBtn.disabled = false;
+                    submitReplyBtn.querySelector('span:not(.hidden)').textContent = '送出回覆';
+                }
+            }
+            
+            /**
+             * (*** 新增 ***) 處理：刪除帖子 (僅限管理員)
+             */
+            async function handleDeletePost(postId) {
+                if (currentUserRole !== 'admin') return;
+                if (!confirm('您確定要刪除這整篇帖子嗎？\n（注意：這目前不會刪除底下的回覆，但會使它們無法被讀取）')) return;
+                
+                try {
+                    await deleteDoc(doc(db, 'forum_posts', postId));
+                    showView('main'); // 返回主列表
+                } catch (e) {
+                    console.error("刪除帖子失敗:", e);
+                    alert(`刪除失敗：${e.message}`);
+                }
+            }
+            
+            /**
+             * (*** 新增 ***) 處理：刪除回覆 (僅限管理員)
+             */
+            async function handleDeleteReply(postId, replyId) {
+                if (currentUserRole !== 'admin') return;
+                if (!confirm('您確定要刪除這則回覆嗎？')) return;
+                
+                try {
+                    await deleteDoc(doc(db, 'forum_posts', postId, 'replies', replyId));
+                    // onSnapshot 會自動更新列表
+                } catch (e) {
+                    console.error("刪除回覆失敗:", e);
+                    alert(`刪除失敗：${e.message}`);
+                }
+            }
+
+            // --- (*** 綁定 ***) 討論區事件監聽 ---
+            showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            backToMainBtn1.addEventListener('click', () => showView('main'));
+            backToMainBtn2.addEventListener('click', () => showView('main'));
+            cancelPostBtn.addEventListener('click', () => showView('main'));
+            newPostFormEl.addEventListener('submit', handleCreatePost);
+            newReplyFormEl.addEventListener('submit', handleCreateReply);
+
+
+            // --- (既有) 篩選器功能函式 ---
 
             /**
              * 建立可用的欄位列表
@@ -780,7 +1282,7 @@
                 groupWrapper.appendChild(headerContainer); // 先加一個空的
 
                 // --- HTML 結構 (移除標頭) ---
-                // (*** 修正 ***) 修正 'value"not_equals"' 拼寫錯誤
+                // (*** 修正 ***) 修正 'value="not_equals"' 拼寫錯誤
                 const groupHTML = `
                     <!-- 第一行：欄位、運算子、比較對象、移除 -->
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -1383,3 +1885,4 @@
 
 </body>
 </html>
+
