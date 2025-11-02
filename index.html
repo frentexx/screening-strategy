@@ -184,10 +184,7 @@
             background-color: #FFFFFF;
             transition: all 0.3s ease;
         }
-        .post-item.pinned { /* (*** 新增 ***) 置頂樣式 */
-            background-color: #FFFBEB; /* yellow-50 */
-            border-color: #FDE68A; /* yellow-200 */
-        }
+        /* (*** 移除 ***) .pinned 樣式已移除 */
         .post-item:hover {
             border-color: #3DB2FF;
             box-shadow: 0 4px 10px rgba(61,178,255,0.1);
@@ -215,8 +212,7 @@
             margin-right: 0.5rem;
             margin-bottom: 0.25rem; /* (*** 新增 ***) 換行間距 */
         }
-        .tag-pinned { background-color: #FEF3C7; color: #92400E; } /* yellow */
-        .tag-featured { background-color: #DBEAFE; color: #1E40AF; } /* blue */
+        /* (*** 移除 ***) .tag-pinned, .tag-featured 樣式已移除 */
         .tag-category { background-color: #E0E7FF; color: #3730A3; } /* indigo */
         .tag-linked { background-color: #D1FAE5; color: #065F46; } /* green */
         
@@ -225,13 +221,7 @@
             padding-top: 1.25rem;
             padding-bottom: 1.25rem;
         }
-        .reply-item.featured-reply { /* (*** 新增 ***) 精選回覆 */
-            background-color: #F0F9FF; /* blue-50 */
-            margin-left: -1.5rem;
-            margin-right: -1.5rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
+        /* (*** 移除 ***) .featured-reply 樣式已移除 */
         .reply-item:first-child {
             border-top: none;
         }
@@ -376,9 +366,9 @@
                     </div>
                 </div>
                 
-                <!-- (*** 新增 ***) 討論區篩選器 (預設折疊) -->
+                <!-- (*** 修改 ***) 討論區篩選器 (移除 標記) -->
                 <div id="forum-filter-controls" class="collapsible-content collapsed bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- 關鍵字 -->
                         <div>
                             <label for="forum-search-keyword" class="block text-sm font-medium text-gray-700 mb-1">關鍵字</label>
@@ -401,20 +391,11 @@
                             <select id="forum-search-status" class="w-full p-2 form-input-style">
                                 <option value="">全部狀態</option>
                                 <option value="unreplied">未回覆</option>
-                                <option value="replied">已回覆</E(*** 新增 ***) >
-                            </select>
-                        </div>
-                        <!-- 標記 -->
-                        <div>
-                            <label for="forum-search-flag" class="block text-sm font-medium text-gray-700 mb-1">標記</label>
-                            <select id="forum-search-flag" class="w-full p-2 form-input-style">
-                                <option value="">全部標記</option>
-                                <option value="pinned">置頂貼</option>
-                                <option value="featured">精選貼</option>
+                                <option value="replied">已回覆</option>
                             </select>
                         </div>
                     </div>
-                    <!-- (*** 新增 ***) 關聯校系篩選 (將在資料載入後填充) -->
+                    <!-- 關聯校系篩選 -->
                     <div class="mt-4">
                         <label for="forum-search-linked-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系</label>
                         <select id="forum-search-linked-dept" class="w-full p-2 form-input-style">
@@ -439,7 +420,7 @@
             <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-6">發表新帖子</h2>
                 <form id="new-post-form">
-                    <!-- (*** 新增 ***) 主題分類 -->
+                    <!-- 主題分類 -->
                     <div class="mb-4">
                         <label for="post-category" class="block text-sm font-medium text-gray-700 mb-1">主題分類</label>
                         <select id="post-category" required class="w-full p-3 form-input-style">
@@ -451,7 +432,7 @@
                         </select>
                     </div>
                     
-                    <!-- (*** 修改 ***) 關聯校系 (單一下拉選單) -->
+                    <!-- 關聯校系 (單一下拉選單) -->
                     <div class="mb-4">
                         <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系 (選填)</label>
                         <select id="post-link-dept" class="w-full p-3 form-input-style">
@@ -460,7 +441,7 @@
                         </select>
                     </div>
 
-                    <!-- (*** 新增 ***) 關聯資料預覽 -->
+                    <!-- 關聯資料預覽 -->
                     <div id="post-link-preview" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-lg text-sm text-blue-800 mb-4">
                         <!-- 關聯資料將顯示於此 -->
                     </div>
@@ -614,15 +595,15 @@
             const backToMainBtn1 = document.getElementById('back-to-main-btn-1');
             const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
             
-            // (*** 新增 ***) 討論區篩選器 DOM
+            // (*** 修改 ***) 討論區篩選器 DOM (移除 'flag')
             const toggleForumFilterBtn = document.getElementById('toggle-forum-filter-btn');
             const forumFilterControlsEl = document.getElementById('forum-filter-controls');
             const forumSearchKeywordEl = document.getElementById('forum-search-keyword');
             const forumSearchCategoryEl = document.getElementById('forum-search-category');
             const forumSearchStatusEl = document.getElementById('forum-search-status');
-            const forumSearchFlagEl = document.getElementById('forum-search-flag');
+            // const forumSearchFlagEl = document.getElementById('forum-search-flag'); // (*** 移除 ***)
             const forumSearchLinkedDeptEl = document.getElementById('forum-search-linked-dept');
-            const forumFilterInputs = [forumSearchKeywordEl, forumSearchCategoryEl, forumSearchStatusEl, forumSearchFlagEl, forumSearchLinkedDeptEl];
+            const forumFilterInputs = [forumSearchKeywordEl, forumSearchCategoryEl, forumSearchStatusEl, forumSearchLinkedDeptEl];
 
 
             // 全域變數儲存資料
@@ -651,17 +632,16 @@
             
             // (*** 修改 ***) 討論區 Firebase 變數
             let forumPostsRef = null;
-            let unsubscribePinnedPosts = null; // (*** 新增 ***)
-            let unsubscribeNormalPosts = null; // (*** 新增 ***)
+            // (*** 修改 ***) 簡化為單一監聽
+            let unsubscribeForumPosts = null; 
             let unsubscribeReplies = null;
             let currentPostId = null; // 追蹤當前查看的帖子 ID
             let currentUserEmail = null;
             let currentUserDisplayName = null;
             
-            // (*** 新增 ***) 討論區客戶端資料快取
-            let pinnedPostsCache = [];
-            let normalPostsCache = [];
-            let forumFilters = {}; // (*** 新增 ***)
+            // (*** 修改 ***) 討論區客戶端資料快取 (簡化)
+            let postsCache = []; // (*** 修改 ***)
+            let forumFilters = {}; 
 
 
             // 您提供的 Firebase 設定
@@ -749,13 +729,9 @@
                     unsubscribeData = null;
                 }
                 // (*** 修改 ***) 停止監聽討論區
-                if (unsubscribePinnedPosts) {
-                    unsubscribePinnedPosts();
-                    unsubscribePinnedPosts = null;
-                }
-                if (unsubscribeNormalPosts) {
-                    unsubscribeNormalPosts();
-                    unsubscribeNormalPosts = null;
+                if (unsubscribeForumPosts) {
+                    unsubscribeForumPosts();
+                    unsubscribeForumPosts = null;
                 }
                 if (unsubscribeReplies) {
                     unsubscribeReplies();
@@ -782,8 +758,7 @@
                 postListContainerEl.innerHTML = '';
                 postDetailContentEl.innerHTML = '';
                 repliesListContainerEl.innerHTML = '';
-                pinnedPostsCache = [];
-                normalPostsCache = [];
+                postsCache = []; // (*** 修改 ***)
                 
                 allHeaders = [];
                 allDataRows = [];
@@ -1046,51 +1021,27 @@
             }
 
             /**
-             * (*** 重構 ***) 監聽討論區帖子列表 (拆分為兩個查詢)
+             * (*** 重構 ***) 監聽討論區帖子列表 (簡化為單一查詢)
              */
             function listenForForumPosts() {
                 if (!forumPostsRef) return;
                 
                 // 停止舊的監聽
-                if (unsubscribePinnedPosts) unsubscribePinnedPosts();
-                if (unsubscribeNormalPosts) unsubscribeNormalPosts();
+                if (unsubscribeForumPosts) unsubscribeForumPosts();
 
-                // --- 查詢 1: 置頂貼 (按置頂時間排序) ---
-                // (*** 重要 ***) 
-                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
-                // 集合: forum_posts, 欄位1: isPinned (等於), 欄位2: pinnedAt (遞減)
-                // (如果遇到錯誤，請檢查註解)
-                const qPinned = query(
+                // (*** 修正 ***) 
+                // 簡化查詢：移除所有 'isPinned' 邏輯，只按發帖時間排序
+                const q = query(
                     forumPostsRef, 
-                    where('isPinned', '==', true), 
-                    orderBy('pinnedAt', 'desc')
-                );
-                
-                unsubscribePinnedPosts = onSnapshot(qPinned, (snapshot) => {
-                    pinnedPostsCache = snapshot.docs;
-                    renderFilteredPostList(); // 重新渲染列表
-                }, (error) => {
-                    console.error("監聽置頂帖子失敗:", error);
-                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入置頂帖子：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
-                });
-
-                // --- 查詢 2: 一般貼 (按發帖時間排序) ---
-                // (*** 重要 ***) 
-                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
-                // 集合: forum_posts, 欄位1: isPinned (等於), 欄位2: createdAt (遞減)
-                // (如果遇到錯誤，請檢查註解)
-                const qNormal = query(
-                    forumPostsRef, 
-                    where('isPinned', '==', false), 
                     orderBy('createdAt', 'desc')
                 );
-
-                unsubscribeNormalPosts = onSnapshot(qNormal, (snapshot) => {
-                    normalPostsCache = snapshot.docs;
+                
+                unsubscribeForumPosts = onSnapshot(q, (snapshot) => {
+                    postsCache = snapshot.docs; // (*** 修改 ***)
                     renderFilteredPostList(); // 重新渲染列表
                 }, (error) => {
-                    console.error("監聽一般帖子失敗:", error);
-                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
+                    console.error("監聽帖子失敗:", error);
+                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}。</p>`;
                 });
             }
 
@@ -1105,7 +1056,7 @@
                         forumSearchKeywordEl.value = forumFilters.keyword || '';
                         forumSearchCategoryEl.value = forumFilters.category || '';
                         forumSearchStatusEl.value = forumFilters.status || '';
-                        forumSearchFlagEl.value = forumFilters.flag || '';
+                        // forumSearchFlagEl.value = forumFilters.flag || ''; // (*** 移除 ***)
                         forumSearchLinkedDeptEl.value = forumFilters.linkedDept || '';
                     }
                 } catch (e) {
@@ -1122,7 +1073,7 @@
                     keyword: forumSearchKeywordEl.value,
                     category: forumSearchCategoryEl.value,
                     status: forumSearchStatusEl.value,
-                    flag: forumSearchFlagEl.value,
+                    // flag: forumSearchFlagEl.value, // (*** 移除 ***)
                     linkedDept: forumSearchLinkedDeptEl.value,
                 };
                 localStorage.setItem('forumFilters', JSON.stringify(forumFilters));
@@ -1137,8 +1088,8 @@
                 // 1. 更新並保存篩選器
                 saveFilters();
 
-                // 2. 合併快取
-                const allPosts = [...pinnedPostsCache, ...normalPostsCache];
+                // 2. (*** 修改 ***) 取得快取
+                const allPosts = postsCache;
 
                 // 3. 執行客戶端篩選
                 const keyword = (forumFilters.keyword || '').toLowerCase().trim();
@@ -1179,15 +1130,7 @@
                         }
                     }
 
-                    // 檢查標記
-                    if (forumFilters.flag) {
-                        if (forumFilters.flag === 'pinned' && !post.isPinned) {
-                            return false;
-                        }
-                        if (forumFilters.flag === 'featured' && !post.isFeatured) {
-                            return false;
-                        }
-                    }
+                    // (*** 移除 ***) 移除 'flag' (置頂/精選) 檢查
 
                     // 檢查關聯校系
                     if (forumFilters.linkedDept) {
@@ -1218,17 +1161,11 @@
                 docs.forEach(doc => {
                     const post = doc.data();
                     const postEl = document.createElement('div');
-                    // (*** 修改 ***) 加入置頂樣式
-                    postEl.className = `post-item ${post.isPinned ? 'pinned' : ''}`;
+                    // (*** 移除 ***) 移除 'pinned' 樣式
+                    postEl.className = `post-item`;
                     
-                    // (*** 新增 ***) 建立標籤
+                    // (*** 修改 ***) 建立標籤 (移除 置頂/精選)
                     let tagsHTML = '';
-                    if (post.isPinned) {
-                        tagsHTML += `<span class="post-tag tag-pinned">📌 置頂</span>`;
-                    }
-                    if (post.isFeatured) {
-                        tagsHTML += `<span class="post-tag tag-featured">✨ 精選</span>`;
-                    }
                     if (post.category) {
                         tagsHTML += `<span class="post-tag tag-category">${post.category}</span>`;
                     }
@@ -1281,26 +1218,18 @@
                     if (docSnap.exists()) {
                         const post = docSnap.data();
                         
-                        // (*** 新增 ***) 管理員按鈕
+                        // (*** 修改 ***) 管理員按鈕 (移除置頂/精選)
                         let adminBtnsHTML = '';
                         if (currentUserRole === 'admin') {
                             adminBtnsHTML = `
                                 <div class="flex gap-2">
-                                    <button id="toggle-pin-btn" class="text-sm font-medium py-1 px-3 rounded-full ${post.isPinned ? 'bg-yellow-400 text-yellow-900' : 'bg-yellow-100 text-yellow-700'} hover:opacity-80">
-                                        ${post.isPinned ? '取消置頂' : '設為置頂'}
-                                    </button>
-                                    <button id="toggle-feature-btn" class="text-sm font-medium py-1 px-3 rounded-full ${post.isFeatured ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-700'} hover:opacity-80">
-                                        ${post.isFeatured ? '取消精選' : '設為精選'}
-                                    </button>
                                     <button id="delete-post-btn" class="text-sm font-medium text-red-600 hover:text-red-800 ml-4">刪除此帖</button>
                                 </div>
                             `;
                         }
                         
-                        // (*** 新增 ***) 標籤
+                        // (*** 修改 ***) 標籤 (移除置頂/精選)
                         let tagsHTML = '';
-                        if (post.isPinned) tagsHTML += `<span class="post-tag tag-pinned">📌 置頂</span>`;
-                        if (post.isFeatured) tagsHTML += `<span class="post-tag tag-featured">✨ 精選</span>`;
                         if (post.category) tagsHTML += `<span class="post-tag tag-category">${post.category}</span>`;
 
                         // (*** 新增 ***) 關聯資料
@@ -1339,8 +1268,6 @@
                         // (*** 新增 ***) 綁定管理員按鈕事件
                         if (currentUserRole === 'admin') {
                             document.getElementById('delete-post-btn').addEventListener('click', () => handleDeletePost(postId));
-                            document.getElementById('toggle-pin-btn').addEventListener('click', () => handleTogglePostFlag(postId, 'isPinned', !post.isPinned));
-                            document.getElementById('toggle-feature-btn').addEventListener('click', () => handleTogglePostFlag(postId, 'isFeatured', !post.isFeatured));
                         }
                     } else {
                         postDetailContentEl.innerHTML = '<p class="text-red-500">錯誤：找不到這篇帖子。</p>';
@@ -1360,16 +1287,15 @@
 
                 const repliesRef = collection(db, 'forum_posts', postId, 'replies');
                 
-                // (*** 修改 ***) 
-                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
-                // 集合: forum_posts/{postId}/replies, 欄位1: isFeaturedReply (遞減), 欄位2: createdAt (遞增)
-                const q = query(repliesRef, orderBy('isFeaturedReply', 'desc'), orderBy('createdAt', 'asc'));
+                // (*** 修正 ***) 
+                // 移除 'isFeaturedReply' 排序，只按時間排序
+                const q = query(repliesRef, orderBy('createdAt', 'asc'));
                 
                 unsubscribeReplies = onSnapshot(q, (snapshot) => {
                     renderReplies(snapshot.docs, postId);
                 }, (error) => {
                     console.error("監聽回覆失敗:", error);
-                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
+                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}。</p>`;
                 });
             }
             
@@ -1388,24 +1314,18 @@
                     const reply = doc.data();
                     const replyId = doc.id;
                     const replyEl = document.createElement('div');
-                    // (*** 修改 ***) 加入精選樣式
-                    replyEl.className = `reply-item ${reply.isFeaturedReply ? 'featured-reply' : ''}`;
+                    // (*** 移除 ***) 移除精選樣式
+                    replyEl.className = `reply-item`;
                     
-                    // (*** 新增 ***) 管理員按鈕
+                    // (*** 修改 ***) 管理員按鈕 (移除精選)
                     let adminBtnHTML = '';
                     if (currentUserRole === 'admin') {
                         adminBtnHTML = `
-                            <button data-postid="${postId}" data-replyid="${replyId}" data-currentval="${reply.isFeaturedReply}" class="toggle-feature-reply-btn text-xs font-medium py-1 px-2 rounded-full ${reply.isFeaturedReply ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-700'} hover:opacity-80 ml-4">
-                                ${reply.isFeaturedReply ? '取消精選' : '設為精選'}
-                            </button>
                             <button data-postid="${postId}" data-replyid="${replyId}" class="delete-reply-btn text-red-500 hover:underline text-xs ml-2">刪除</button>
                         `;
                     }
                     
-                    let featuredBadge = '';
-                    if(reply.isFeaturedReply) {
-                        featuredBadge = '<span class="post-tag tag-featured text-xs">✨ 精選回覆</span>';
-                    }
+                    // (*** 移除 ***) 移除精選徽章
 
                     // (*** 修改 ***) 更新回覆 HTML
                     replyEl.innerHTML = `
@@ -1415,7 +1335,6 @@
                                 <span> 回覆於 ${formatTimestamp(reply.createdAt)}</span>
                             </p>
                             <div>
-                                ${featuredBadge}
                                 ${adminBtnHTML}
                             </div>
                         </div>
@@ -1424,22 +1343,16 @@
                     repliesListContainerEl.appendChild(replyEl);
                 });
                 
-                // (*** 修改 ***) 綁定所有刪除/精選回覆按鈕
+                // (*** 修改 ***) 綁定所有刪除回覆按鈕
                 repliesListContainerEl.querySelectorAll('.delete-reply-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         handleDeleteReply(e.currentTarget.dataset.postid, e.currentTarget.dataset.replyid);
                     });
                 });
-                repliesListContainerEl.querySelectorAll('.toggle-feature-reply-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const currentVal = e.currentTarget.dataset.currentval === 'true';
-                        handleToggleReplyFlag(e.currentTarget.dataset.postid, e.currentTarget.dataset.replyid, 'isFeaturedReply', !currentVal);
-                    });
-                });
             }
 
             /**
-             * (*** 修改 ***) 處理：發表新帖子
+             * (*** 修改 ***) 處理：發表新帖子 (移除 isPinned/isFeatured)
              */
             async function handleCreatePost(event) {
                 event.preventDefault();
@@ -1459,7 +1372,10 @@
                 let linkedData = {};
                 if (linkedDeptValue) {
                     const [school, dept] = linkedDeptValue.split(' - ');
-                    const row = allDataRows.find(r => r[schoolDataCache.schoolColIdx] === school && r[schoolDataCache.deptColIdx] === dept);
+                    const row = allDataRows.find(r => 
+                        r[schoolDataCache.schoolColIdx] && r[schoolDataCache.schoolColIdx].trim() === school && 
+                        r[schoolDataCache.deptColIdx] && r[schoolDataCache.deptColIdx].trim() === dept
+                    );
                     if (row) {
                         linkedData = {
                             linkedSchoolName: school,
@@ -1475,16 +1391,13 @@
                 submitPostBtn.querySelector('span:not(.hidden)').textContent = '發佈中...';
 
                 try {
-                    // (*** 修改 ***) 加入新欄位
+                    // (*** 修改 ***) 移除置頂/精選相關欄位
                     await addDoc(forumPostsRef, {
                         title: title,
                         content: content,
                         category: category,
-                        ...linkedData, // (*** 新增 ***)
-                        isPinned: false, // (*** 新增 ***)
-                        pinnedAt: null,  // (*** 新增 ***)
-                        isFeatured: false, // (*** 新增 ***)
-                        replyCount: 0,   // (*** 新增 ***)
+                        ...linkedData, 
+                        replyCount: 0,   // (*** 保留 ***)
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
                         authorDisplayName: currentUserDisplayName,
@@ -1516,9 +1429,9 @@
                 try {
                     // 1. 新增回覆
                     const repliesRef = collection(db, 'forum_posts', currentPostId, 'replies');
+                    // (*** 修改 ***) 移除 isFeaturedReply
                     await addDoc(repliesRef, {
                         content: content,
-                        isFeaturedReply: false, 
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
                         authorDisplayName: currentUserDisplayName,
@@ -1541,45 +1454,8 @@
                 }
             }
             
-            /**
-             * (*** 修改 ***) 處理：切換帖子標記 (置頂/精選)
-             */
-            async function handleTogglePostFlag(postId, flagName, newValue) {
-                if (currentUserRole !== 'admin') return;
-                
-                const postRef = doc(db, 'forum_posts', postId);
-                try {
-                    // (*** 修改 ***) 置頂時，更新 pinnedAt
-                    let updateData = { [flagName]: newValue };
-                    if (flagName === 'isPinned') {
-                        updateData.pinnedAt = newValue ? serverTimestamp() : null;
-                    }
-                    
-                    await updateDoc(postRef, updateData);
-                    // onSnapshot 會自動更新 UI
-                } catch (e) {
-                    console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}`);
-                }
-            }
-
-            /**
-             * (*** 新增 ***) 處理：切換回覆標記 (精選)
-             */
-            async function handleToggleReplyFlag(postId, replyId, flagName, newValue) {
-                if (currentUserRole !== 'admin') return;
-                
-                const replyRef = doc(db, 'forum_posts', postId, 'replies', replyId);
-                try {
-                    await updateDoc(replyRef, {
-                        [flagName]: newValue
-                    });
-                    // onSnapshot 會自動更新 UI
-                } catch (e) {
-                    console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}`);
-                }
-            }
+            // (*** 移除 ***) handleTogglePostFlag 函式已移除
+            // (*** 移除 ***) handleToggleReplyFlag 函式已移除
 
             /**
              * (*** 新增 ***) 處理：刪除帖子 (僅限管理員)
@@ -1622,23 +1498,27 @@
             }
             
             // --- (*** 新增 ***) 討論區 UI 綁定 ---
-            showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            cancelPostBtn.addEventListener('click', () => showView('main'));
-            backToMainBtn1.addEventListener('click', () => showView('main'));
-            backToMainBtn2.addEventListener('click', () => showView('main'));
-            newPostFormEl.addEventListener('submit', handleCreatePost);
-            newReplyFormEl.addEventListener('submit', handleCreateReply);
+            if(showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            if(cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
+            if(backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
+            if(backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
+            if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
+            if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
 
             // (*** 新增 ***) 討論區篩選器事件
-            toggleForumFilterBtn.addEventListener('click', () => {
-                forumFilterControlsEl.classList.toggle('collapsed');
-                const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
-                toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
-            });
+            if (toggleForumFilterBtn) {
+                toggleForumFilterBtn.addEventListener('click', () => {
+                    forumFilterControlsEl.classList.toggle('collapsed');
+                    const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
+                    toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
+                });
+            }
             // 綁定所有篩選 input 的 'input' 或 'change' 事件
             forumFilterInputs.forEach(input => {
-                input.addEventListener('input', renderFilteredPostList);
-                input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
+                if (input) {
+                    input.addEventListener('input', renderFilteredPostList);
+                    input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
+                }
             });
 
             // --- (*** 修改 ***) 篩選器和 UI 邏輯 ---
@@ -1725,30 +1605,32 @@
             /**
              * (*** 修改 ***) 綁定關聯校系下拉選單的 change 事件
              */
-            postLinkDeptEl.addEventListener('change', () => {
-                const selectedValue = postLinkDeptEl.value;
-                if (!selectedValue) {
-                    postLinkPreviewEl.classList.add('hidden');
-                    return;
-                }
+            if (postLinkDeptEl) {
+                postLinkDeptEl.addEventListener('change', () => {
+                    const selectedValue = postLinkDeptEl.value;
+                    if (!selectedValue) {
+                        postLinkPreviewEl.classList.add('hidden');
+                        return;
+                    }
 
-                const [school, dept] = selectedValue.split(' - ');
-                const row = allDataRows.find(r => 
-                    r[schoolDataCache.schoolColIdx] === school && 
-                    r[schoolDataCache.deptColIdx] === dept
-                );
-                
-                if (row) {
-                    postLinkPreviewEl.innerHTML = `
-                        <strong>關聯資料預覽:</strong><br>
-                        112分發結果: ${row[schoolDataCache.col112Idx] || 'N/A'}<br>
-                        113分發結果: ${row[schoolDataCache.col113Idx] || 'N/A'}
-                    `;
-                    postLinkPreviewEl.classList.remove('hidden');
-                } else {
-                    postLinkPreviewEl.classList.add('hidden');
-                }
-            });
+                    const [school, dept] = selectedValue.split(' - ');
+                    const row = allDataRows.find(r => 
+                        r[schoolDataCache.schoolColIdx] && r[schoolDataCache.schoolColIdx].trim() === school && 
+                        r[schoolDataCache.deptColIdx] && r[schoolDataCache.deptColIdx].trim() === dept
+                    );
+                    
+                    if (row) {
+                        postLinkPreviewEl.innerHTML = `
+                            <strong>關聯資料預覽:</strong><br>
+                            112分發結果: ${row[schoolDataCache.col112Idx] || 'N/A'}<br>
+                            113分發結果: ${row[schoolDataCache.col113Idx] || 'N/A'}
+                        `;
+                        postLinkPreviewEl.classList.remove('hidden');
+                    } else {
+                        postLinkPreviewEl.classList.add('hidden');
+                    }
+                });
+            }
 
 
             /**
@@ -2093,7 +1975,7 @@
                             case 'gt':
                                 return isNumeric ? leftValNum > val1Num : leftValStr > val1Str;
                             case 'lt':
-                                return isNumeric ? leftValNum < val1Num : leftValStr < val1Num;
+                                return isNumeric ? leftValNum < val1Num : leftValStr < valExamples;
                             case 'gte':
                                 return isNumeric ? leftValNum >= val1Num : leftValStr >= val1Str;
                             case 'lte':
