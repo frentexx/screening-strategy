@@ -542,6 +542,16 @@
             Timestamp      // (*** 新增 ***)
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+        
+        // (*** 新增 ***) Debounce 函式
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
 
         // (*** 修改 ***) 將所有程式碼放入 DOMContentLoaded 事件中
         // 這確保在綁定事件時，所有 HTML 元素都已載入
@@ -1080,9 +1090,10 @@
             }
             
             /**
-             * (*** 新增 ***) 應用討論區篩選並渲染
+             * (*** 新增 ***) 應用討論區篩選並渲染 (加入 Debounce)
              */
-            function renderFilteredPostList() {
+            // (*** 修正 ***) 建立 debounce 版本的函式
+            const debouncedFilterHandler = debounce(() => {
                 if (!postListContainerEl) return;
                 
                 // 1. 更新並保存篩選器
@@ -1151,7 +1162,13 @@
 
                 // 4. 渲染結果
                 renderPostList(filteredDocs);
+            }, 300); // 延遲 300 毫秒
+
+            // (*** 修改 ***) 建立一個 wrapper 函式
+            function renderFilteredPostList() {
+                debouncedFilterHandler();
             }
+
 
             /**
              * (*** 修改 ***) 渲染帖子列表 (僅負責 HTML)
@@ -1503,30 +1520,6 @@
                 }
             }
             
-            // --- (*** 新增 ***) 討論區 UI 綁定 ---
-            if(showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            if(cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
-            if(backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
-            if(backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
-            if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
-            if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
-
-            // (*** 新增 ***) 討論區篩選器事件
-            if (toggleForumFilterBtn) {
-                toggleForumFilterBtn.addEventListener('click', () => {
-                    forumFilterControlsEl.classList.toggle('collapsed');
-                    const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
-                    toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
-                });
-            }
-            // 綁定所有篩選 input 的 'input' 或 'change' 事件
-            forumFilterInputs.forEach(input => {
-                if (input) {
-                    input.addEventListener('input', renderFilteredPostList);
-                    input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
-                }
-            });
-
             // --- (*** 修改 ***) 篩選器和 UI 邏輯 ---
 
             /**
@@ -2358,7 +2351,7 @@
                     toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
                 });
             }
-            // 綁定所有篩選 input 的 'input' 或 'change' 事件
+            // (*** 修改 ***) 綁定 debounce 版本的函式
             forumFilterInputs.forEach(input => {
                 if (input) {
                     input.addEventListener('input', renderFilteredPostList);
