@@ -754,14 +754,18 @@
             }
 
             // (*** 新增 ***) Google 登入事件監聽
-            googleLoginBtn.addEventListener('click', signInWithGoogle);
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener('click', signInWithGoogle);
+            }
 
             // (*** 修改 ***) D (*** 新增 ***) 登出按鈕事件監聽
-            logoutBtn.addEventListener('click', async () => {
-                if (auth) {
-                    await signOut(auth); // 觸發 onAuthStateChanged
-                }
-            });
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    if (auth) {
+                        await signOut(auth); // 觸發 onAuthStateChanged
+                    }
+                });
+            }
 
 
             /**
@@ -823,7 +827,9 @@
 
                 } catch (e) {
                     console.error("Firebase 初始化失敗:", e);
-                    resultsOutputEl.innerHTML = `Firebase 初始化失敗: ${e.message}。請刷新頁面。`;
+                    if (resultsOutputEl) {
+                        resultsOutputEl.innerHTML = `Firebase 初始化失敗: ${e.message}。請刷新頁面。`;
+                    }
                 }
             }
             
@@ -978,13 +984,20 @@
                     unsubscribeForumPosts();
                 }
 
-                // (*** 修改 ***) 更新查詢，加入置頂排序
-                const q = query(forumPostsRef, orderBy('isPinned', 'desc'), orderBy('createdAt', 'desc'));
+                // (*** 修改 ***) 
+                // 暫時移除 'isPinned' 排序，以避免索引錯誤。
+                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
+                // 集合: forum_posts, 欄位1: isPinned (遞減), 欄位2: createdAt (遞減)
+                // const q = query(forumPostsRef, orderBy('isPinned', 'desc'), orderBy('createdAt', 'desc'));
+                
+                // (*** 修正 ***) 暫時使用單一排序
+                const q = query(forumPostsRef, orderBy('createdAt', 'desc'));
+
                 unsubscribeForumPosts = onSnapshot(q, (snapshot) => {
                     renderPostList(snapshot.docs);
                 }, (error) => {
                     console.error("監聽帖子列表失敗:", error);
-                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}</p>`;
+                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}。請檢查 Firebase 索引設定。</p>`;
                 });
             }
 
@@ -992,6 +1005,7 @@
              * 渲染帖子列表
              */
             function renderPostList(docs) {
+                if (!postListContainerEl) return;
                 postListContainerEl.innerHTML = ''; // 清空
                 if (docs.length === 0) {
                     postListContainerEl.innerHTML = '<p class="text-gray-500">目前沒有任何帖子，快來發表第一個吧！</p>';
@@ -1146,7 +1160,7 @@
                     renderReplies(snapshot.docs, postId);
                 }, (error) => {
                     console.error("監聽回覆失敗:", error);
-                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}</p>`;
+                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}。請檢查 Firebase 索引設定。</p>`;
                 });
             }
             
@@ -1154,6 +1168,7 @@
              * (*** 修改 ***) 渲染回覆列表
              */
             function renderReplies(docs, postId) {
+                if (!repliesListContainerEl) return;
                 repliesListContainerEl.innerHTML = '';
                 if (docs.length === 0) {
                     repliesListContainerEl.innerHTML = '<p class="text-gray-500">目前尚無回覆。</p>';
@@ -1439,56 +1454,60 @@
             }
             
             // (*** 新增 ***) 關聯學校 - 事件監聽
-            postLinkSchoolEl.addEventListener('change', () => {
-                const selectedSchool = postLinkSchoolEl.value;
-                postLinkDeptEl.innerHTML = '<option value="">-- 請選擇科系 --</option>';
-                postLinkPreviewEl.classList.add('hidden');
-                
-                if (!selectedSchool) {
-                    postLinkDeptEl.disabled = true;
-                    return;
-                }
+            if (postLinkSchoolEl) {
+                postLinkSchoolEl.addEventListener('change', () => {
+                    const selectedSchool = postLinkSchoolEl.value;
+                    postLinkDeptEl.innerHTML = '<option value="">-- 請選擇科系 --</option>';
+                    postLinkPreviewEl.classList.add('hidden');
+                    
+                    if (!selectedSchool) {
+                        postLinkDeptEl.disabled = true;
+                        return;
+                    }
 
-                const depts = schoolDataCache.schools.get(selectedSchool);
-                if (depts) {
-                    depts.sort().forEach(dept => {
-                        postLinkDeptEl.innerHTML += `<option value="${dept}">${dept}</option>`;
-                    });
-                    postLinkDeptEl.disabled = false;
-                }
-            });
+                    const depts = schoolDataCache.schools.get(selectedSchool);
+                    if (depts) {
+                        depts.sort().forEach(dept => {
+                            postLinkDeptEl.innerHTML += `<option value="${dept}">${dept}</option>`;
+                        });
+                        postLinkDeptEl.disabled = false;
+                    }
+                });
+            }
             
             // (*** 新增 ***) 關聯科系 - 事件監聽
-            postLinkDeptEl.addEventListener('change', () => {
-                const selectedSchool = postLinkSchoolEl.value;
-                const selectedDept = postLinkDeptEl.value;
-                postLinkPreviewEl.classList.add('hidden');
+            if (postLinkDeptEl) {
+                postLinkDeptEl.addEventListener('change', () => {
+                    const selectedSchool = postLinkSchoolEl.value;
+                    const selectedDept = postLinkDeptEl.value;
+                    postLinkPreviewEl.classList.add('hidden');
 
-                if (!selectedSchool || !selectedDept) return;
-                
-                // 尋找資料
-                const row = allDataRows.find(r => r[schoolDataCache.schoolColIdx] === selectedSchool && r[schoolDataCache.deptColIdx] === selectedDept);
-                if (row) {
-                    const data112 = row[schoolDataCache.col112Idx] !== undefined ? row[schoolDataCache.col112Idx] : 'N/A';
-                    const data113 = row[schoolDataCache.col113Idx] !== undefined ? row[schoolDataCache.col113Idx] : 'N/A';
+                    if (!selectedSchool || !selectedDept) return;
                     
-                    postLinkPreviewEl.innerHTML = `
-                        <strong>關聯資料預覽：</strong>
-                        <span>112分發結果: ${data112}</span>, 
-                        <span>113分發結果: ${data113}</span>
-                    `;
-                    postLinkPreviewEl.classList.remove('hidden');
-                }
-            });
+                    // 尋找資料
+                    const row = allDataRows.find(r => r[schoolDataCache.schoolColIdx] === selectedSchool && r[schoolDataCache.deptColIdx] === selectedDept);
+                    if (row) {
+                        const data112 = row[schoolDataCache.col112Idx] !== undefined ? row[schoolDataCache.col112Idx] : 'N/A';
+                        const data113 = row[schoolDataCache.col113Idx] !== undefined ? row[schoolDataCache.col113Idx] : 'N/A';
+                        
+                        postLinkPreviewEl.innerHTML = `
+                            <strong>關聯資料預覽：</strong>
+                            <span>112分發結果: ${data112}</span>, 
+                            <span>113分發結果: ${data113}</span>
+                        `;
+                        postLinkPreviewEl.classList.remove('hidden');
+                    }
+                });
+            }
 
 
             // --- (*** 綁定 ***) 討論區事件監聽 ---
-            showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            backToMainBtn1.addEventListener('click', () => showView('main'));
-            backToMainBtn2.addEventListener('click', () => showView('main'));
-            cancelPostBtn.addEventListener('click', () => showView('main'));
-            newPostFormEl.addEventListener('submit', handleCreatePost);
-            newReplyFormEl.addEventListener('submit', handleCreateReply);
+            if (showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            if (backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
+            if (backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
+            if (cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
+            if (newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
+            if (newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
 
 
             // --- (既有) 篩選器功能函式 ---
@@ -2198,14 +2217,14 @@
             // (*** 修改 ***) 將事件綁定移入 DOMContentLoaded
 
             // 綁定檔案上傳事件
-            fileInputEl.addEventListener('change', handleFile);
+            if (fileInputEl) fileInputEl.addEventListener('change', handleFile);
 
             // 幫按鈕綁定事件
-            filterButtonEl.addEventListener('click', applyFilter);
-            exportButtonEl.addEventListener('click', exportResults);
+            if (filterButtonEl) filterButtonEl.addEventListener('click', applyFilter);
+            if (exportButtonEl) exportButtonEl.addEventListener('click', exportResults);
             // --- 綁定新按鈕 ---
-            addFilterBtnEl.addEventListener('click', () => addFilterGroup());
-            clearFiltersBtnEl.addEventListener('click', () => clearAllFilters(true));
+            if (addFilterBtnEl) addFilterBtnEl.addEventListener('click', () => addFilterGroup());
+            if (clearFiltersBtnEl) clearFiltersBtnEl.addEventListener('click', () => clearAllFilters(true));
 
             // (*** 新增 ***) 啟動 Firebase 初始化
             initializeAppAndAuth();
