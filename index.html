@@ -233,17 +233,8 @@
             word-wrap: break-word; /* 長單字換行 */
         }
         
-        /* (*** 新增 ***) 折疊區域動畫 */
-        .collapsible-content {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            overflow: hidden;
-            max-height: 500px; /* 預設一個足夠大的高度 */
-            opacity: 1;
-        }
-        .collapsible-content.collapsed {
-            max-height: 0;
-            opacity: 0;
-        }
+        /* (*** 移除 ***) 折疊區域動畫 (已不需要) */
+
     </style>
 </head>
 <body class="bg-gray-50">
@@ -258,7 +249,7 @@
         </div>
 
         <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
-            <p class="text-center text-gray-700 font-medium mb-2">請使用 本校帳號登入</p>
+            <p class="text-center text-gray-700 font-medium mb-2">請使用 @ppsh.ptc.edu.tw 網域帳號登入</p>
             <!-- (*** 新增 ***) 使用範圍說明 -->
             <p class="text-center text-gray-500 text-sm mb-6">
                 本網站僅供小清華原民班師生使用，<br>非屏北高中網域帳號無法登入。
@@ -369,9 +360,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800">💬 討論區</h2>
                     <div class="flex gap-4">
-                        <button id="toggle-forum-filter-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">
-                            顯示篩選
-                        </button>
+                        <!-- (*** 移除 ***) "顯示篩選" 按鈕已移除 -->
                         <button id="show-new-post-form-btn" class="btn-add rounded-xl py-2 px-4 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -ml-1 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -381,8 +370,8 @@
                     </div>
                 </div>
                 
-                <!-- (*** 修改 ***) 討論區篩選器 (移除 標記) -->
-                <div id="forum-filter-controls" class="collapsible-content collapsed bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
+                <!-- (*** 修改 ***) 討論區篩選器 (移除 標記, 移除折疊) -->
+                <div id="forum-filter-controls" class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- 關鍵字 -->
                         <div>
@@ -621,12 +610,11 @@
             const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
             
             // (*** 修改 ***) 討論區篩選器 DOM (移除 標記)
-            const toggleForumFilterBtn = document.getElementById('toggle-forum-filter-btn');
+            // (*** 移除 ***) toggleForumFilterBtn
             const forumFilterControlsEl = document.getElementById('forum-filter-controls');
             const forumSearchKeywordEl = document.getElementById('forum-search-keyword');
             const forumSearchCategoryEl = document.getElementById('forum-search-category');
             const forumSearchStatusEl = document.getElementById('forum-search-status');
-            // const forumSearchFlagEl = document.getElementById('forum-search-flag'); // (*** 移除 ***)
             const forumSearchLinkedDeptEl = document.getElementById('forum-search-linked-dept');
             const forumFilterInputs = [forumSearchKeywordEl, forumSearchCategoryEl, forumSearchStatusEl, forumSearchLinkedDeptEl];
 
@@ -2002,7 +1990,7 @@
                             case 'gt':
                                 return isNumeric ? leftValNum > val1Num : leftValStr > val1Str;
                             case 'lt':
-                                // (*** 偵錯修正 ***) valExamples -> val1Str
+                                // (*** 偵錯修正 ***) valExamples -> val1Str (已修正)
                                 return isNumeric ? leftValNum < val1Num : leftValStr < val1Str;
                             case 'gte':
                                 return isNumeric ? leftValNum >= val1Num : leftValStr >= val1Str;
@@ -2371,14 +2359,7 @@
             if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
             if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
 
-            // (*** 新增 ***) 討論區篩選器事件
-            if (toggleForumFilterBtn) {
-                toggleForumFilterBtn.addEventListener('click', () => {
-                    forumFilterControlsEl.classList.toggle('collapsed');
-                    const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
-                    toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
-                });
-            }
+            // (*** 修改 ***) 討論區篩選器事件 (移除按鈕綁定)
             // (*** 修改 ***) 綁定 debounce 版本的函式
             forumFilterInputs.forEach(input => {
                 if (input) {
