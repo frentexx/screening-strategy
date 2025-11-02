@@ -384,23 +384,15 @@
                         </select>
                     </div>
                     
-                    <!-- (*** 新增 ***) 關聯校系 -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="post-link-school" class="block text-sm font-medium text-gray-700 mb-1">關聯學校 (選填)</label>
-                            <select id="post-link-school" class="w-full p-3 form-input-style">
-                                <option value="">-- 尚無資料或無須關聯 --</option>
-                                <!-- 由 JS 載入 -->
-                            </select>
-                        </div>
-                        <div>
-                            <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯科系 (選填)</label>
-                            <select id="post-link-dept" class="w-full p-3 form-input-style" disabled>
-                                <option value="">-- 請先選學校 --</option>
-                                <!-- 由 JS 載入 -->
-                            </select>
-                        </div>
+                    <!-- (*** 修正 ***) 關聯校系 (單一下拉選單) -->
+                    <div class="mb-4">
+                        <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系 (選填)</label>
+                        <select id="post-link-dept" class="w-full p-3 form-input-style">
+                            <option value="">-- 尚無資料或無須關聯 --</option>
+                            <!-- 由 JS 載入 -->
+                        </select>
                     </div>
+
                     <!-- (*** 新增 ***) 關聯資料預覽 -->
                     <div id="post-link-preview" class="hidden bg-blue-50 border border-blue-200 p-3 rounded-lg text-sm text-blue-800 mb-4">
                         <!-- 關聯資料將顯示於此 -->
@@ -536,8 +528,8 @@
             // 發帖表單
             const newPostFormEl = document.getElementById('new-post-form');
             const postCategoryEl = document.getElementById('post-category'); // (*** 新增 ***)
-            const postLinkSchoolEl = document.getElementById('post-link-school'); // (*** 新增 ***)
-            const postLinkDeptEl = document.getElementById('post-link-dept'); // (*** 新增 ***)
+            // (*** 修正 ***) 移除 postLinkSchoolEl，只保留 postLinkDeptEl
+            const postLinkDeptEl = document.getElementById('post-link-dept'); 
             const postLinkPreviewEl = document.getElementById('post-link-preview'); // (*** 新增 ***)
             const postTitleEl = document.getElementById('post-title');
             const postContentEl = document.getElementById('post-content');
@@ -568,7 +560,7 @@
                 col112Idx: -1,
                 col113Idx: -1,
                 // (*** 修正 ***) 使用 Set 來自動處理重複
-                schools: new Map() // { schoolName -> Set[dept1, dept2] }
+                fullDeptList: new Set() // (*** 修正 ***) Set["學校 - 科系"]
             };
 
 
@@ -708,7 +700,7 @@
                 allHeaders = [];
                 allDataRows = [];
                 availableColumns = [];
-                schoolDataCache = { schools: new Map() }; // (*** 新增 ***) 清空快取
+                schoolDataCache = { fullDeptList: new Set() }; // (*** 新增 ***) 清空快取
                 clearAllFilters(false); // 清除篩選器但不顯示預覽
             }
 
@@ -878,7 +870,7 @@
                         console.log("資料庫中尚無資料");
                         allHeaders = [];
                         allDataRows = [];
-                        schoolDataCache = { schools: new Map() }; // (*** 新增 ***) 清空快取
+                        schoolDataCache = { fullDeptList: new Set() }; // (*** 新增 ***) 清空快取
                         filterControlsEl.classList.add('hidden');
 
                         if (currentUserRole === 'admin') {
@@ -992,7 +984,7 @@
                 schoolDataCache.col113Idx = allHeaders.findIndex(h => h && h.trim() === col113Name);
 
                 // 2. 建立快取
-                schoolDataCache.schools.clear();
+                schoolDataCache.fullDeptList.clear();
                 if (schoolDataCache.schoolColIdx === -1 || schoolDataCache.deptColIdx === -1) {
                     console.warn("找不到 '學校' 或 '校系名稱' 欄位，關聯功能將無法使用。");
                     return;
@@ -1003,10 +995,8 @@
                     const deptName = row[schoolDataCache.deptColIdx] ? row[schoolDataCache.deptColIdx].trim() : null;
                     
                     if (schoolName && deptName) {
-                        if (!schoolDataCache.schools.has(schoolName)) {
-                            schoolDataCache.schools.set(schoolName, new Set()); // (*** 修正 ***) 使用 Set
-                        }
-                        schoolDataCache.schools.get(schoolName).add(deptName); // (*** 修正 ***) Set 會自動處理重複
+                        // (*** 修正 ***) 儲存 "學校 - 科系" 格式
+                        schoolDataCache.fullDeptList.add(`${schoolName} - ${deptName}`);
                     }
                 });
                 
@@ -1014,59 +1004,34 @@
             }
 
             /**
-             * (*** 修正 ***) 填充「關聯學校」下拉選單
+             * (*** 修正 ***) 填充「關聯校系」下拉選單
              */
             function populateLinkedSchoolDropdowns() {
-                postLinkSchoolEl.innerHTML = '<option value="">-- 無須關聯 --</option>'; // 重設
+                postLinkDeptEl.innerHTML = '<option value="">-- 無須關聯 --</option>'; // 重設
                 
-                // (*** 修正 ***) 從 Map 的 keys (已去空白) 建立
-                const sortedSchools = [...schoolDataCache.schools.keys()].sort((a, b) => a.localeCompare(b, 'zh-Hant'));
+                // (*** 修正 ***) 從 Set (已去重複和空白) 建立
+                const sortedFullDepts = [...schoolDataCache.fullDeptList].sort((a, b) => a.localeCompare(b, 'zh-Hant'));
                 
-                sortedSchools.forEach(schoolName => {
+                sortedFullDepts.forEach(fullDeptName => {
                     const option = document.createElement('option');
-                    option.value = schoolName;
-                    option.textContent = schoolName;
-                    postLinkSchoolEl.appendChild(option);
+                    option.value = fullDeptName; // value 也是 "學校 - 科系"
+                    option.textContent = fullDeptName;
+                    postLinkDeptEl.appendChild(option);
                 });
-                
-                postLinkDeptEl.innerHTML = '<option value="">-- 請先選學校 --</option>';
-                postLinkDeptEl.disabled = true;
             }
             
-            /**
-             * (*** 修正 ***) 處理：關聯學校選擇變更
-             */
-            function handleLinkedSchoolChange(event) {
-                const selectedSchool = event.target.value;
-                postLinkDeptEl.innerHTML = '<option value="">-- 請選擇科系 --</option>';
-                postLinkPreviewEl.classList.add('hidden'); // 隱藏預覽
-
-                if (selectedSchool && schoolDataCache.schools.has(selectedSchool)) {
-                    // (*** 修正 ***) 從 Set 建立排序後的陣列
-                    const depts = [...schoolDataCache.schools.get(selectedSchool)].sort((a, b) => a.localeCompare(b, 'zh-Hant'));
-                    
-                    depts.forEach(deptName => {
-                        const option = document.createElement('option');
-                        option.value = deptName;
-                        option.textContent = deptName;
-                        postLinkDeptEl.appendChild(option);
-                    });
-                    postLinkDeptEl.disabled = false;
-                } else {
-                    postLinkDeptEl.disabled = true;
-                }
-            }
             
             /**
              * (*** 修正 ***) 處理：關聯科系選擇變更
              */
             function handleLinkedDeptChange(event) {
-                const selectedSchool = postLinkSchoolEl.value;
-                const selectedDept = event.target.value;
+                const selectedFullDept = event.target.value;
                 postLinkPreviewEl.classList.add('hidden');
 
-                if (!selectedSchool || !selectedDept) return;
+                if (!selectedFullDept) return;
                 
+                const [selectedSchool, selectedDept] = selectedFullDept.split(' - ');
+
                 // (*** 修正 ***) 使用 .trim() 之後的快取索引
                 const row = allDataRows.find(r => 
                     r[schoolDataCache.schoolColIdx] && r[schoolDataCache.deptColIdx] &&
@@ -1372,11 +1337,11 @@
                     return;
                 }
                 
-                // (*** 新增 ***) 獲取關聯資料
-                const school = postLinkSchoolEl.value;
-                const dept = postLinkDeptEl.value;
+                // (*** 修正 ***) 獲取關聯資料 (單一下拉選單)
+                const selectedFullDept = postLinkDeptEl.value;
                 let linkedData = {};
-                if (school && dept) {
+                if (selectedFullDept) {
+                    const [school, dept] = selectedFullDept.split(' - ');
                     // (*** 修正 ***) 使用 .trim() 後的索引
                     const row = allDataRows.find(r => 
                         r[schoolDataCache.schoolColIdx] && r[schoolDataCache.deptColIdx] &&
@@ -1405,7 +1370,7 @@
                         content: content,
                         category: category,
                         ...linkedData, // (*** 新增 ***)
-                        isPinned: false, // (*** 新
+                        isPinned: false, // (*** 新增 ***)
                         isFeatured: false, // (*** 新增 ***)
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
@@ -1470,7 +1435,7 @@
                     // onSnapshot 會自動更新 UI
                 } catch (e) {
                     console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}`);
+                    alert(`更新失敗：${e.message}。請檢查 Firestore 安全規則。`);
                 }
             }
 
@@ -1488,7 +1453,7 @@
                     // onSnapshot 會自動更新 UI
                 } catch (e) {
                     console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}`);
+                    alert(`更新失敗：${e.message}。請檢查 Firestore 安全規則。`);
                 }
             }
 
@@ -1525,15 +1490,14 @@
             }
 
             // --- (*** 討論區事件綁定 ***) ---
-            showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            cancelPostBtn.addEventListener('click', () => showView('main'));
-            backToMainBtn1.addEventListener('click', () => showView('main'));
-            backToMainBtn2.addEventListener('click', () => showView('main'));
-            newPostFormEl.addEventListener('submit', handleCreatePost);
-            newReplyFormEl.addEventListener('submit', handleCreateReply);
-            // (*** 新增 ***) 關聯校系下拉選單事件
-            postLinkSchoolEl.addEventListener('change', handleLinkedSchoolChange);
-            postLinkDeptEl.addEventListener('change', handleLinkedDeptChange);
+            if (showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            if (cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
+            if (backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
+            if (backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
+            if (newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
+            if (newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
+            // (*** 修正 ***) 關聯校系下拉選單事件
+            if (postLinkDeptEl) postLinkDeptEl.addEventListener('change', handleLinkedDeptChange);
             
 
             // --- (以下是篩選和 UI 邏輯，大部分不變) ---
@@ -1834,23 +1798,25 @@
              * (修改) 清除所有條件組
              */
             function clearAllFilters(showPreview = true) {
-                filterGroupsContainerEl.innerHTML = '';
-                // (*** 修改 ***) 只有在有欄位可選時才新增
-                if(availableColumns.length > 0) {
-                     addFilterGroup(); // 新增第一個預設群組
+                if (filterGroupsContainerEl) { // (*** 新增 ***) 檢查元素是否存在
+                    filterGroupsContainerEl.innerHTML = '';
+                    // (*** 修改 ***) 只有在有欄位可選時才新增
+                    if(availableColumns.length > 0) {
+                         addFilterGroup(); // 新增第一個預設群組
+                    }
                 }
                 
                 if (showPreview && allDataRows.length > 0) {
                     displayInitialPreview(); // 顯示預覽
                 } else if (currentUserRole === 'admin' && allDataRows.length === 0) {
-                    resultsOutputEl.innerHTML = '資料庫為空或資料已清除。請上傳檔案。';
+                    if (resultsOutputEl) resultsOutputEl.innerHTML = '資料庫為空或資料已清除。請上傳檔案。';
                 } else if (currentUserRole === 'user' && allDataRows.length === 0) {
-                     resultsOutputEl.innerHTML = '目前資料庫中沒有資料。請等待管理者上傳。';
+                     if (resultsOutputEl) resultsOutputEl.innerHTML = '目前資料庫中沒有資料。請等待管理者上傳。';
                 } else if (!currentUserRole) {
-                    resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; // 登出時
+                    if (resultsOutputEl) resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; // 登出時
                 }
 
-                exportButtonEl.classList.add('hidden');
+                if (exportButtonEl) exportButtonEl.classList.add('hidden');
                 currentExportData = null;
                 updateFilterChips(); // 清除標籤
             }
@@ -2131,6 +2097,7 @@
              * (更新) 更新篩選條件標籤 (Chips)
              */
             function updateFilterChips() {
+                if (!filterChipsContainerEl) return; // (*** 新增 ***) 檢查元素
                 filterChipsContainerEl.innerHTML = '';
                 if (activeFilters.length === 0) {
                     filterChipsContainerEl.classList.add('hidden');
@@ -2255,10 +2222,9 @@
             if (backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
             if (newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
             if (newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
-            // (*** 新增 ***) 關聯校系下拉選單事件
-            if (postLinkSchoolEl) postLinkSchoolEl.addEventListener('change', handleLinkedSchoolChange);
+            // (*** 修正 ***) 關聯校系下拉選單事件
             if (postLinkDeptEl) postLinkDeptEl.addEventListener('change', handleLinkedDeptChange);
-
+            
 
             // (*** 新增 ***) 啟動 Firebase 初始化
             initializeAppAndAuth();
