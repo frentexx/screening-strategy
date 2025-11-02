@@ -417,7 +417,7 @@
                     </div>
 
                     <div class="flex justify-end gap-4">
-                        <button type="button" id="cancel-post-btn" class_name="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">取消</button>
+                        <button type="button" id="cancel-post-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">取消</button>
                         <button type="submit" id="submit-post-btn" class="btn-upload rounded-xl py-2 px-6">
                             <span id="submit-post-spinner" class="hidden">...</span>
                             <span>發佈</span>
@@ -984,7 +984,7 @@
                     unsubscribeForumPosts();
                 }
 
-                // (*** 修改 ***) 
+                // (*** 修正 ***) 
                 // 暫時移除 'isPinned' 排序，以避免索引錯誤。
                 // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
                 // 集合: forum_posts, 欄位1: isPinned (遞減), 欄位2: createdAt (遞減)
@@ -1153,8 +1153,15 @@
                 }
 
                 const repliesRef = collection(db, 'forum_posts', postId, 'replies');
-                // (*** 修改 ***) 更新查詢，精選優先
-                const q = query(repliesRef, orderBy('isFeaturedReply', 'desc'), orderBy('createdAt', 'asc'));
+                
+                // (*** 修正 ***) 
+                // 暫時移除 'isFeaturedReply' 排序，以避免索引錯誤。
+                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
+                // 集合: forum_posts/{postId}/replies, 欄位1: isFeaturedReply (遞減), 欄位2: createdAt (遞增)
+                // const q = query(repliesRef, orderBy('isFeaturedReply', 'desc'), orderBy('createdAt', 'asc'));
+
+                // (*** 修正 ***) 暫時使用單一排序
+                const q = query(repliesRef, orderBy('createdAt', 'asc'));
                 
                 unsubscribeReplies = onSnapshot(q, (snapshot) => {
                     renderReplies(snapshot.docs, postId);
@@ -1389,7 +1396,7 @@
                     console.error("刪除回覆失敗:", e);
                     alert(`刪除失敗：${e.message}`);
                 }
-            }
+            } // (*** 修正 ***) 補上缺少的 '}'
 
             // --- (*** 新增 ***) 關聯校系下拉選單 ---
             
