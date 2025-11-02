@@ -45,7 +45,8 @@
             border-radius: 1rem;
             box-shadow: 0 4px 10px rgba(61,178,255,0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            padding: 0.75rem 1.5rem;
+            /* (*** 修改 ***) 增加 Padding */
+            padding: 0.85rem 1.75rem; 
             font-weight: 600;
         }
         .btn-upload:hover {
@@ -245,18 +246,32 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
 
-    <!-- (修改) 登入容器，改為 Google 登入 -->
-    <div id="login-container" class="container mx-auto p-4 md:p-8 max-w-md mt-20">
+    <!-- (*** 修改 ***) 登入容器，移除 Logo，更新標題 -->
+    <div id="login-container" class="container mx-auto p-4 md:p-8 max-w-md mt-10 md:mt-16">
+        
+        <!-- (*** 修改 ***) 網站標題 (移除 Logo) -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">小清華原民班</h1>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-700">志願選填輔助網站</h2>
+        </div>
+
         <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
-            <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">歡迎使用</h1>
-            <p class="text-center text-gray-600 mb-6">請使用 @ppsh.ptc.edu.tw 網域帳號登入</p>
+            <p class="text-center text-gray-700 font-medium mb-2">請使用 @ppsh.ptc.edu.tw 網域帳號登入</p>
+            <!-- (*** 新增 ***) 使用範圍說明 -->
+            <p class="text-center text-gray-500 text-sm mb-6">
+                本網站僅供小清華原民班師生使用，<br>非屏北高中網域帳號無法登入。
+            </p>
             <div class="space-y-4">
-                <!-- Google 登入按鈕 -->
+                <!-- (*** 修改 ***) Google 登入按鈕 (修正排版) -->
                 <button id="google-login-btn" class="btn-upload w-full !rounded-xl !py-3 flex items-center justify-center gap-3">
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C39.756 34.927 44 28.159 44 20c0-1.341-.138-2.65-.389-3.917z"></path></svg>
-                    使用 Google 帳號登入
+                    <svg class="w-6 h-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C39.756 34.927 44 28.159 44 20c0-1.341-.138-2.65-.389-3.917z"></path></svg>
+                    <!-- (*** 新增 ***) span 和 nowrap 確保同一行 -->
+                    <span class="whitespace-nowrap">
+                        使用 Google 帳號登入
+                        <span class="text-xs opacity-80">（限 @ppsh.ptc.edu.tw）</span>
+                    </span>
                 </button>
                 <p id="login-error" class="text-red-500 text-sm mt-2 h-4 text-center"></p>
             </div>
@@ -432,7 +447,7 @@
                         </select>
                     </div>
                     
-                    <!-- 關聯校系 (單一下拉選單) -->
+                    <!-- (*** 修改 ***) 關聯校系 (單一下拉選單) -->
                     <div class="mb-4">
                         <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系 (選填)</label>
                         <select id="post-link-dept" class="w-full p-3 form-input-style">
@@ -605,7 +620,7 @@
             const backToMainBtn1 = document.getElementById('back-to-main-btn-1');
             const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
             
-            // (*** 修改 ***) 討論區篩選器 DOM (移除 'flag')
+            // (*** 修改 ***) 討論區篩選器 DOM (移除 標記)
             const toggleForumFilterBtn = document.getElementById('toggle-forum-filter-btn');
             const forumFilterControlsEl = document.getElementById('forum-filter-controls');
             const forumSearchKeywordEl = document.getElementById('forum-search-keyword');
@@ -777,7 +792,7 @@
             }
 
             /**
-             * (*** 新增 ***) Google 登入函式
+             * (*** 修改 ***) Google 登入函式 (加入登入時驗證)
              */
             async function signInWithGoogle() {
                 if (!auth) {
@@ -795,9 +810,21 @@
 
                 try {
                     loginErrorEl.textContent = '正在開啟 Google 登入視窗...';
-                    await signInWithPopup(auth, provider);
-                    // 登入成功後，onAuthStateChanged 會自動觸發
-                    loginErrorEl.textContent = '';
+                    const result = await signInWithPopup(auth, provider);
+                    
+                    // (*** 新增 ***) 登入後立刻檢查
+                    const user = result.user;
+                    const userEmail = user.email || '';
+                    
+                    if (userEmail === 'fuwen@ppsh.ptc.edu.tw' || userEmail.endsWith('@ppsh.ptc.edu.tw')) {
+                        // 網域正確，onAuthStateChanged 會接手處理
+                        loginErrorEl.textContent = '';
+                    } else {
+                        // 網域不符，立刻登出並顯示錯誤
+                        loginErrorEl.textContent = '錯誤：僅允許 @ppsh.ptc.edu.tw 網域登入。';
+                        await signOut(auth);
+                    }
+
                 } catch (error) {
                     console.error("Google 登入失敗:", error);
                     
@@ -847,7 +874,7 @@
                             currentUserEmail = userEmail;
                             currentUserDisplayName = user.displayName || userEmail.split('@')[0];
                             
-                            // (*** 新增 ***) 檢查 Email 網域
+                            // (*** 修改 ***) 這裡的檢查現在是備援 (signInWithGoogle 已先檢查過)
                             if (userEmail === 'fuwen@ppsh.ptc.edu.tw') {
                                 // 管理者
                                 console.log("管理者登入:", userId, userEmail);
@@ -863,7 +890,7 @@
                                 listenForForumPosts(); // (*** 新增 ***) 監聽討論區
                             } 
                             else {
-                                // 網域不符
+                                // 網域不符 (理論上不會執行到，但作為保險)
                                 console.warn("網域不符，強制登出:", userEmail);
                                 loginErrorEl.textContent = '錯誤：僅允許 @ppsh.ptc.edu.tw 網域登入。';
                                 signOut(auth); // 強制登出
@@ -1148,8 +1175,9 @@
 
                     // 檢查關聯校系
                     if (forumFilters.linkedDept) {
-                        const [school, dept] = forumFilters.linkedDept.split(' - ');
-                        if (!post.linkedSchoolName || !post.linkedDepartmentName || post.linkedSchoolName !== school || post.linkedDepartmentName !== dept) {
+                        // (*** 修改 ***) 
+                        const linkedText = `${post.linkedSchoolName || ''} - ${post.linkedDepartmentName || ''}`;
+                        if (forumFilters.linkedDept !== linkedText) {
                             return false;
                         }
                     }
@@ -2358,6 +2386,18 @@
                     input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
                 }
             });
+
+            // (*** 新增 ***) 
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener('click', signInWithGoogle);
+            }
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    if (auth) {
+                        await signOut(auth); // 觸發 onAuthStateChanged
+                    }
+                });
+            }
 
 
             // (*** 新增 ***) 啟動 Firebase 初始化
