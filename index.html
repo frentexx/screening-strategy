@@ -213,7 +213,7 @@
             padding: 0.2rem 0.6rem;
             border-radius: 9999px; /* rounded-full */
             margin-right: 0.5rem;
-            margin-top: 0.25rem; /* (*** 新增 ***) 增加標籤間距 */
+            margin-bottom: 0.25rem; /* (*** 新增 ***) 換行間距 */
         }
         .tag-pinned { background-color: #FEF3C7; color: #92400E; } /* yellow */
         .tag-featured { background-color: #DBEAFE; color: #1E40AF; } /* blue */
@@ -242,6 +242,17 @@
             word-wrap: break-word; /* 長單字換行 */
         }
         
+        /* (*** 新增 ***) 折疊區域動畫 */
+        .collapsible-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            overflow: hidden;
+            max-height: 500px; /* 預設一個足夠大的高度 */
+            opacity: 1;
+        }
+        .collapsible-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -347,17 +358,73 @@
                 </div>
             </section>
 
-            <!-- (*** 新增 ***) 討論區列表區塊 -->
+            <!-- (*** 修改 ***) 討論區區塊 -->
             <section id="forum-section" class="mt-8 pt-8 border-t border-gray-200">
+                <!-- 標題 和 發帖按鈕 -->
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800">💬 討論區</h2>
-                    <button id="show-new-post-form-btn" class="btn-add rounded-xl py-2 px-4 font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -ml-1 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        發表新帖
-                    </button>
+                    <div class="flex gap-4">
+                        <button id="toggle-forum-filter-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">
+                            顯示篩選
+                        </button>
+                        <button id="show-new-post-form-btn" class="btn-add rounded-xl py-2 px-4 font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -ml-1 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            發表新帖
+                        </button>
+                    </div>
                 </div>
+                
+                <!-- (*** 新增 ***) 討論區篩選器 (預設折疊) -->
+                <div id="forum-filter-controls" class="collapsible-content collapsed bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- 關鍵字 -->
+                        <div>
+                            <label for="forum-search-keyword" class="block text-sm font-medium text-gray-700 mb-1">關鍵字</label>
+                            <input type="text" id="forum-search-keyword" class="w-full p-2 form-input-style" placeholder="標題、內容、校系...">
+                        </div>
+                        <!-- 分類 -->
+                        <div>
+                            <label for="forum-search-category" class="block text-sm font-medium text-gray-700 mb-1">主題分類</label>
+                            <select id="forum-search-category" class="w-full p-2 form-input-style">
+                                <option value="">全部分類</option>
+                                <option value="校系資訊詢問">校系資訊詢問</option>
+                                <option value="志願填寫策略">志願填寫策略</option>
+                                <option value="經驗分享">經驗分享</option>
+                                <option value="其他問題">其他問題</option>
+                            </select>
+                        </div>
+                        <!-- 狀態 -->
+                        <div>
+                            <label for="forum-search-status" class="block text-sm font-medium text-gray-700 mb-1">互動狀態</label>
+                            <select id="forum-search-status" class="w-full p-2 form-input-style">
+                                <option value="">全部狀態</option>
+                                <option value="unreplied">未回覆</option>
+                                <option value="replied">已回覆</E(*** 新增 ***) >
+                            </select>
+                        </div>
+                        <!-- 標記 -->
+                        <div>
+                            <label for="forum-search-flag" class="block text-sm font-medium text-gray-700 mb-1">標記</label>
+                            <select id="forum-search-flag" class="w-full p-2 form-input-style">
+                                <option value="">全部標記</option>
+                                <option value="pinned">置頂貼</option>
+                                <option value="featured">精選貼</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- (*** 新增 ***) 關聯校系篩選 (將在資料載入後填充) -->
+                    <div class="mt-4">
+                        <label for="forum-search-linked-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系</label>
+                        <select id="forum-search-linked-dept" class="w-full p-2 form-input-style">
+                            <option value="">全部校系</option>
+                            <!-- 由 JS 載入 -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 帖子列表 -->
                 <div id="post-list-container" class="space-y-4">
                     <p class="text-gray-500">正在載入帖子...</p>
                     <!-- 帖子列表將由 JS 動態插入 -->
@@ -384,11 +451,11 @@
                         </select>
                     </div>
                     
-                    <!-- (*** 修正 ***) 關聯校系 (單一下拉選單) -->
+                    <!-- (*** 修改 ***) 關聯校系 (單一下拉選單) -->
                     <div class="mb-4">
                         <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系 (選填)</label>
                         <select id="post-link-dept" class="w-full p-3 form-input-style">
-                            <option value="">-- 尚無資料或無須關聯 --</option>
+                            <option value="">-- 無須關聯 --</option>
                             <!-- 由 JS 載入 -->
                         </select>
                     </div>
@@ -488,7 +555,10 @@
             orderBy,       // (*** 新增 ***)
             getDoc,        // (*** 新增 ***)
             deleteDoc,     // (*** 新增 ***)
-            updateDoc      // (*** 新增 ***)
+            updateDoc,     // (*** 新增 ***)
+            increment,     // (*** 新增 ***)
+            where,         // (*** 新增 ***)
+            Timestamp      // (*** 新增 ***)
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
@@ -528,8 +598,7 @@
             // 發帖表單
             const newPostFormEl = document.getElementById('new-post-form');
             const postCategoryEl = document.getElementById('post-category'); // (*** 新增 ***)
-            // (*** 修正 ***) 移除 postLinkSchoolEl，只保留 postLinkDeptEl
-            const postLinkDeptEl = document.getElementById('post-link-dept'); 
+            const postLinkDeptEl = document.getElementById('post-link-dept'); // (*** 修改 ***)
             const postLinkPreviewEl = document.getElementById('post-link-preview'); // (*** 新增 ***)
             const postTitleEl = document.getElementById('post-title');
             const postContentEl = document.getElementById('post-content');
@@ -544,6 +613,16 @@
             // 返回按鈕
             const backToMainBtn1 = document.getElementById('back-to-main-btn-1');
             const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
+            
+            // (*** 新增 ***) 討論區篩選器 DOM
+            const toggleForumFilterBtn = document.getElementById('toggle-forum-filter-btn');
+            const forumFilterControlsEl = document.getElementById('forum-filter-controls');
+            const forumSearchKeywordEl = document.getElementById('forum-search-keyword');
+            const forumSearchCategoryEl = document.getElementById('forum-search-category');
+            const forumSearchStatusEl = document.getElementById('forum-search-status');
+            const forumSearchFlagEl = document.getElementById('forum-search-flag');
+            const forumSearchLinkedDeptEl = document.getElementById('forum-search-linked-dept');
+            const forumFilterInputs = [forumSearchKeywordEl, forumSearchCategoryEl, forumSearchStatusEl, forumSearchFlagEl, forumSearchLinkedDeptEl];
 
 
             // 全域變數儲存資料
@@ -553,14 +632,14 @@
             let currentExportData = null;
             let activeFilters = []; // 儲存當前套用的篩選條件
             
-            // (*** 修改 ***) 校系資料
+            // (*** 修改 ***) 校系資料快取
             let schoolDataCache = {
                 schoolColIdx: -1,
                 deptColIdx: -1,
                 col112Idx: -1,
                 col113Idx: -1,
-                // (*** 修正 ***) 使用 Set 來自動處理重複
-                fullDeptList: new Set() // (*** 修正 ***) Set["學校 - 科系"]
+                // (*** 修改 ***) 合併為單一列表
+                linkedDeptList: [] // 儲存 { text: "學校 - 科系", school: "...", dept: "..." }
             };
 
 
@@ -570,13 +649,19 @@
             let schoolDataDocRef = null; // 指向公用資料的
             let unsubscribeData = null; // 用於取消監聽
             
-            // (*** 新增 ***) 討論區 Firebase 變數
+            // (*** 修改 ***) 討論區 Firebase 變數
             let forumPostsRef = null;
-            let unsubscribeForumPosts = null;
+            let unsubscribePinnedPosts = null; // (*** 新增 ***)
+            let unsubscribeNormalPosts = null; // (*** 新增 ***)
             let unsubscribeReplies = null;
             let currentPostId = null; // 追蹤當前查看的帖子 ID
             let currentUserEmail = null;
             let currentUserDisplayName = null;
+            
+            // (*** 新增 ***) 討論區客戶端資料快取
+            let pinnedPostsCache = [];
+            let normalPostsCache = [];
+            let forumFilters = {}; // (*** 新增 ***)
 
 
             // 您提供的 Firebase 設定
@@ -610,8 +695,8 @@
                 switch (viewId) {
                     case 'new-post':
                         newPostFormEl.reset(); // 清空表單
-                        postLinkPreviewEl.classList.add('hidden'); // (*** 新增 ***) 隱藏預覽
-                        populateLinkedSchoolDropdowns(); // (*** 新增 ***) 載入校系
+                        postLinkPreviewEl.classList.add('hidden'); 
+                        // populateLinkedSchoolDropdowns(); // (*** 修改 ***) 改為在啟動時載入
                         newPostFormViewEl.classList.remove('hidden');
                         break;
                     case 'detail':
@@ -648,9 +733,6 @@
                     resultsOutputEl.innerHTML = '正在從資料庫載入資料...';
                     userDisplayEl.textContent = `使用者 (${userEmail}) 已登入`;
                 }
-                
-                // (修改) 開始監聽資料 (移至 Auth 狀態變更時)
-                // listenForSchoolData(); // 由 onAuthStateChanged 觸發
             }
 
             /**
@@ -666,10 +748,14 @@
                     unsubscribeData();
                     unsubscribeData = null;
                 }
-                // (*** 新增 ***) 停止監聽討論區
-                if (unsubscribeForumPosts) {
-                    unsubscribeForumPosts();
-                    unsubscribeForumPosts = null;
+                // (*** 修改 ***) 停止監聽討論區
+                if (unsubscribePinnedPosts) {
+                    unsubscribePinnedPosts();
+                    unsubscribePinnedPosts = null;
+                }
+                if (unsubscribeNormalPosts) {
+                    unsubscribeNormalPosts();
+                    unsubscribeNormalPosts = null;
                 }
                 if (unsubscribeReplies) {
                     unsubscribeReplies();
@@ -696,11 +782,12 @@
                 postListContainerEl.innerHTML = '';
                 postDetailContentEl.innerHTML = '';
                 repliesListContainerEl.innerHTML = '';
+                pinnedPostsCache = [];
+                normalPostsCache = [];
                 
                 allHeaders = [];
                 allDataRows = [];
                 availableColumns = [];
-                schoolDataCache = { fullDeptList: new Set() }; // (*** 新增 ***) 清空快取
                 clearAllFilters(false); // 清除篩選器但不顯示預覽
             }
 
@@ -747,22 +834,7 @@
                     }
                 }
             }
-
-            // (*** 新增 ***) Google 登入事件監聽
-            if (googleLoginBtn) {
-                googleLoginBtn.addEventListener('click', signInWithGoogle);
-            }
-
-            // (*** 修改 ***) D (*** 新增 ***) 登出按鈕事件監聽
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    if (auth) {
-                        await signOut(auth); // 觸發 onAuthStateChanged
-                    }
-                });
-            }
-
-
+            
             /**
              * (修改) 初始化 Firebase 應用和認證 (使用 v9 模組化語法)
              */
@@ -813,7 +885,7 @@
                             }
                             
                         } else {
-                            // 使用者已登B (*** 新增 ***) 出
+                            // 使用者已登出
                             userId = null;
                             console.log("使用者已登出");
                             handleLogout(); // 呼叫登出 UI
@@ -854,6 +926,7 @@
                             
                             populateAvailableColumns();
                             processSchoolDataCache(); // (*** 新增 ***) 處理校系資料
+                            populateLinkedSchoolDropdowns(); // (*** 新增 ***) 填充討論區下拉選單
                             filterControlsEl.classList.remove('hidden');
                             clearAllFilters(true); // 顯示預覽
                             
@@ -870,7 +943,8 @@
                         console.log("資料庫中尚無資料");
                         allHeaders = [];
                         allDataRows = [];
-                        schoolDataCache = { fullDeptList: new Set() }; // (*** 新增 ***) 清空快取
+                        schoolDataCache = { linkedDeptList: [] }; // (*** 新增 ***) 清空快取
+                        populateLinkedSchoolDropdowns(); // (*** 新增 ***) 清空下拉選單
                         filterControlsEl.classList.add('hidden');
 
                         if (currentUserRole === 'admin') {
@@ -959,135 +1033,185 @@
              */
             function formatTimestamp(timestamp) {
                 if (!timestamp) return '時間不詳';
-                return timestamp.toDate().toLocaleString('zh-TW', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
-            
-            /**
-             * (*** 修正 ***) 處理並快取校系資料，用於發帖下拉選單
-             */
-            function processSchoolDataCache() {
-                // 1. 找到 "學校" 和 "校系名稱" 的欄位索引
-                const schoolColName = "學校";
-                const deptColName = "校系名稱";
-                const col112Name = "112分發結果";
-                const col113Name = "113分發結果";
-
-                schoolDataCache.schoolColIdx = allHeaders.findIndex(h => h && h.trim() === schoolColName);
-                schoolDataCache.deptColIdx = allHeaders.findIndex(h => h && h.trim() === deptColName);
-                schoolDataCache.col112Idx = allHeaders.findIndex(h => h && h.trim() === col112Name);
-                schoolDataCache.col113Idx = allHeaders.findIndex(h => h && h.trim() === col113Name);
-
-                // 2. 建立快取
-                schoolDataCache.fullDeptList.clear();
-                if (schoolDataCache.schoolColIdx === -1 || schoolDataCache.deptColIdx === -1) {
-                    console.warn("找不到 '學校' 或 '校系名稱' 欄位，關聯功能將無法使用。");
-                    return;
+                if (timestamp instanceof Timestamp) {
+                    return timestamp.toDate().toLocaleString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                 }
-
-                allDataRows.forEach(row => {
-                    const schoolName = row[schoolDataCache.schoolColIdx] ? row[schoolDataCache.schoolColIdx].trim() : null;
-                    const deptName = row[schoolDataCache.deptColIdx] ? row[schoolDataCache.deptColIdx].trim() : null;
-                    
-                    if (schoolName && deptName) {
-                        // (*** 修正 ***) 儲存 "學校 - 科系" 格式
-                        schoolDataCache.fullDeptList.add(`${schoolName} - ${deptName}`);
-                    }
-                });
-                
-                console.log("校系資料快取處理完畢。");
+                return '無效時間';
             }
 
             /**
-             * (*** 修正 ***) 填充「關聯校系」下拉選單
-             */
-            function populateLinkedSchoolDropdowns() {
-                postLinkDeptEl.innerHTML = '<option value="">-- 無須關聯 --</option>'; // 重設
-                
-                // (*** 修正 ***) 從 Set (已去重複和空白) 建立
-                const sortedFullDepts = [...schoolDataCache.fullDeptList].sort((a, b) => a.localeCompare(b, 'zh-Hant'));
-                
-                sortedFullDepts.forEach(fullDeptName => {
-                    const option = document.createElement('option');
-                    option.value = fullDeptName; // value 也是 "學校 - 科系"
-                    option.textContent = fullDeptName;
-                    postLinkDeptEl.appendChild(option);
-                });
-            }
-            
-            
-            /**
-             * (*** 修正 ***) 處理：關聯科系選擇變更
-             */
-            function handleLinkedDeptChange(event) {
-                const selectedFullDept = event.target.value;
-                postLinkPreviewEl.classList.add('hidden');
-
-                if (!selectedFullDept) return;
-                
-                const [selectedSchool, selectedDept] = selectedFullDept.split(' - ');
-
-                // (*** 修正 ***) 使用 .trim() 之後的快取索引
-                const row = allDataRows.find(r => 
-                    r[schoolDataCache.schoolColIdx] && r[schoolDataCache.deptColIdx] &&
-                    r[schoolDataCache.schoolColIdx].trim() === selectedSchool && 
-                    r[schoolDataCache.deptColIdx].trim() === selectedDept
-                );
-                
-                if (row && schoolDataCache.col112Idx !== -1 && schoolDataCache.col113Idx !== -1) {
-                    const data112 = row[schoolDataCache.col112Idx] || 'N/A';
-                    const data113 = row[schoolDataCache.col113Idx] || 'N/A';
-                    postLinkPreviewEl.innerHTML = `
-                        <strong>關聯資料預覽:</strong><br>
-                        112分發結果: ${data112}<br>
-                        113分發結果: ${data113}
-                    `;
-                    postLinkPreviewEl.classList.remove('hidden');
-                }
-            }
-            
-
-            /**
-             * 監聽討論區帖子列表
+             * (*** 重構 ***) 監聽討論區帖子列表 (拆分為兩個查詢)
              */
             function listenForForumPosts() {
                 if (!forumPostsRef) return;
                 
-                // 防止重複監聽
-                if (unsubscribeForumPosts) {
-                    unsubscribeForumPosts();
-                }
+                // 停止舊的監聽
+                if (unsubscribePinnedPosts) unsubscribePinnedPosts();
+                if (unsubscribeNormalPosts) unsubscribeNormalPosts();
 
-                // (*** 修正 ***) 
-                // 暫時移除 'isPinned' 排序，以避免索引錯誤。
+                // --- 查詢 1: 置頂貼 (按置頂時間排序) ---
+                // (*** 重要 ***) 
                 // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
-                // 集合: forum_posts, 欄位1: isPinned (遞減), 欄位2: createdAt (遞減)
-                // const q = query(forumPostsRef, orderBy('isPinned', 'desc'), orderBy('createdAt', 'desc'));
+                // 集合: forum_posts, 欄位1: isPinned (等於), 欄位2: pinnedAt (遞減)
+                // (如果遇到錯誤，請檢查註解)
+                const qPinned = query(
+                    forumPostsRef, 
+                    where('isPinned', '==', true), 
+                    orderBy('pinnedAt', 'desc')
+                );
                 
-                // (*** 修正 ***) 暫時使用單一排序
-                const q = query(forumPostsRef, orderBy('createdAt', 'desc'));
-
-                unsubscribeForumPosts = onSnapshot(q, (snapshot) => {
-                    renderPostList(snapshot.docs);
+                unsubscribePinnedPosts = onSnapshot(qPinned, (snapshot) => {
+                    pinnedPostsCache = snapshot.docs;
+                    renderFilteredPostList(); // 重新渲染列表
                 }, (error) => {
-                    console.error("監聽帖子列表失敗:", error);
-                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}。請檢查 Firebase 索引設定。</p>`;
+                    console.error("監聽置頂帖子失敗:", error);
+                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入置頂帖子：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
+                });
+
+                // --- 查詢 2: 一般貼 (按發帖時間排序) ---
+                // (*** 重要 ***) 
+                // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
+                // 集合: forum_posts, 欄位1: isPinned (等於), 欄位2: createdAt (遞減)
+                // (如果遇到錯誤，請檢查註解)
+                const qNormal = query(
+                    forumPostsRef, 
+                    where('isPinned', '==', false), 
+                    orderBy('createdAt', 'desc')
+                );
+
+                unsubscribeNormalPosts = onSnapshot(qNormal, (snapshot) => {
+                    normalPostsCache = snapshot.docs;
+                    renderFilteredPostList(); // 重新渲染列表
+                }, (error) => {
+                    console.error("監聽一般帖子失敗:", error);
+                    postListContainerEl.innerHTML = `<p class="text-red-500">無法載入帖子：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
                 });
             }
 
             /**
-             * 渲染帖子列表
+             * (*** 新增 ***) 從 localStorage 載入篩選器
+             */
+            function loadFilters() {
+                try {
+                    const savedFilters = localStorage.getItem('forumFilters');
+                    if (savedFilters) {
+                        forumFilters = JSON.parse(savedFilters);
+                        forumSearchKeywordEl.value = forumFilters.keyword || '';
+                        forumSearchCategoryEl.value = forumFilters.category || '';
+                        forumSearchStatusEl.value = forumFilters.status || '';
+                        forumSearchFlagEl.value = forumFilters.flag || '';
+                        forumSearchLinkedDeptEl.value = forumFilters.linkedDept || '';
+                    }
+                } catch (e) {
+                    console.warn("載入篩選器失敗", e);
+                    forumFilters = {};
+                }
+            }
+
+            /**
+             * (*** 新增 ***) 保存篩選器到 localStorage
+             */
+            function saveFilters() {
+                 forumFilters = {
+                    keyword: forumSearchKeywordEl.value,
+                    category: forumSearchCategoryEl.value,
+                    status: forumSearchStatusEl.value,
+                    flag: forumSearchFlagEl.value,
+                    linkedDept: forumSearchLinkedDeptEl.value,
+                };
+                localStorage.setItem('forumFilters', JSON.stringify(forumFilters));
+            }
+            
+            /**
+             * (*** 新增 ***) 應用討論區篩選並渲染
+             */
+            function renderFilteredPostList() {
+                if (!postListContainerEl) return;
+                
+                // 1. 更新並保存篩選器
+                saveFilters();
+
+                // 2. 合併快取
+                const allPosts = [...pinnedPostsCache, ...normalPostsCache];
+
+                // 3. 執行客戶端篩選
+                const keyword = (forumFilters.keyword || '').toLowerCase().trim();
+                const keywords = keyword.split(' ').filter(k => k); // 支援多關鍵字
+
+                const filteredDocs = allPosts.filter(doc => {
+                    const post = doc.data();
+                    
+                    // 檢查關鍵字
+                    if (keywords.length > 0) {
+                        const searchContent = [
+                            post.title,
+                            post.content,
+                            post.authorDisplayName,
+                            post.authorEmail,
+                            post.linkedSchoolName,
+                            post.linkedDepartmentName
+                        ].join(' ').toLowerCase();
+                        
+                        // 必須包含所有關鍵字
+                        if (!keywords.every(k => searchContent.includes(k))) {
+                            return false;
+                        }
+                    }
+                    
+                    // 檢查分類
+                    if (forumFilters.category && post.category !== forumFilters.category) {
+                        return false;
+                    }
+
+                    // 檢查狀態
+                    if (forumFilters.status) {
+                        if (forumFilters.status === 'unreplied' && (post.replyCount || 0) > 0) {
+                            return false;
+                        }
+                        if (forumFilters.status === 'replied' && (post.replyCount || 0) === 0) {
+                            return false;
+                        }
+                    }
+
+                    // 檢查標記
+                    if (forumFilters.flag) {
+                        if (forumFilters.flag === 'pinned' && !post.isPinned) {
+                            return false;
+                        }
+                        if (forumFilters.flag === 'featured' && !post.isFeatured) {
+                            return false;
+                        }
+                    }
+
+                    // 檢查關聯校系
+                    if (forumFilters.linkedDept) {
+                        const [school, dept] = forumFilters.linkedDept.split(' - ');
+                        if (!post.linkedSchoolName || !post.linkedDepartmentName || post.linkedSchoolName !== school || post.linkedDepartmentName !== dept) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                });
+                
+                // 4. 渲染結果
+                renderPostList(filteredDocs);
+            }
+
+            /**
+             * (*** 修改 ***) 渲染帖子列表 (僅負責 HTML)
              */
             function renderPostList(docs) {
                 if (!postListContainerEl) return;
                 postListContainerEl.innerHTML = ''; // 清空
                 if (docs.length === 0) {
-                    postListContainerEl.innerHTML = '<p class="text-gray-500">目前沒有任何帖子，快來發表第一個吧！</p>';
+                    postListContainerEl.innerHTML = '<p class="text-gray-500">找不到符合條件的帖子。</p>';
                     return;
                 }
 
@@ -1109,14 +1233,14 @@
                         tagsHTML += `<span class="post-tag tag-category">${post.category}</span>`;
                     }
                     if (post.linkedSchoolName) {
-                        // (*** 修正 ***) 顯示學校和科系
-                        const dept = post.linkedDepartmentName ? ` - ${post.linkedDepartmentName}` : '';
-                        tagsHTML += `<span class="post-tag tag-linked">${post.linkedSchoolName}${dept}</span>`;
+                        // (*** 修改 ***) 顯示完整校系
+                        const linkedText = `${post.linkedSchoolName} - ${post.linkedDepartmentName}`;
+                        tagsHTML += `<span class="post-tag tag-linked">${linkedText}</span>`;
                     }
 
                     // (*** 修改 ***) 更新列表項的 HTML
                     postEl.innerHTML = `
-                        <div class="mb-2">
+                        <div class="mb-2 flex flex-wrap">
                             ${tagsHTML}
                         </div>
                         <div class="flex justify-between items-center mb-1">
@@ -1124,6 +1248,7 @@
                         </div>
                         <p class="post-meta">
                             由 ${post.authorDisplayName || post.authorEmail} 發表於 ${formatTimestamp(post.createdAt)}
+                            <span class="ml-4">回覆 (${post.replyCount || 0})</span>
                         </p>
                     `;
                     
@@ -1160,14 +1285,14 @@
                         let adminBtnsHTML = '';
                         if (currentUserRole === 'admin') {
                             adminBtnsHTML = `
-                                <div class="flex flex-wrap gap-2"> <!-- (*** 新增 ***) flex-wrap -->
+                                <div class="flex gap-2">
                                     <button id="toggle-pin-btn" class="text-sm font-medium py-1 px-3 rounded-full ${post.isPinned ? 'bg-yellow-400 text-yellow-900' : 'bg-yellow-100 text-yellow-700'} hover:opacity-80">
                                         ${post.isPinned ? '取消置頂' : '設為置頂'}
                                     </button>
                                     <button id="toggle-feature-btn" class="text-sm font-medium py-1 px-3 rounded-full ${post.isFeatured ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-700'} hover:opacity-80">
                                         ${post.isFeatured ? '取消精選' : '設為精選'}
                                     </button>
-                                    <button id="delete-post-btn" class="text-sm font-medium text-red-600 hover:text-red-800 ml-auto">刪除此帖</button>
+                                    <button id="delete-post-btn" class="text-sm font-medium text-red-600 hover:text-red-800 ml-4">刪除此帖</button>
                                 </div>
                             `;
                         }
@@ -1195,11 +1320,11 @@
 
                         // (*** 修改 ***) 更新詳情 HTML
                         postDetailContentEl.innerHTML = `
-                            <div class="mb-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex flex-wrap">
+                                    ${tagsHTML}
+                                </div>
                                 ${adminBtnsHTML}
-                            </div>
-                            <div class="mb-2">
-                                ${tagsHTML}
                             </div>
                             <h2 class="text-3xl font-bold text-gray-800 mb-2">${post.title}</h2>
                             <p class="post-meta mb-4">
@@ -1213,13 +1338,9 @@
                         
                         // (*** 新增 ***) 綁定管理員按鈕事件
                         if (currentUserRole === 'admin') {
-                            const deleteBtn = document.getElementById('delete-post-btn');
-                            const pinBtn = document.getElementById('toggle-pin-btn');
-                            const featureBtn = document.getElementById('toggle-feature-btn');
-                            
-                            if (deleteBtn) deleteBtn.addEventListener('click', () => handleDeletePost(postId));
-                            if (pinBtn) pinBtn.addEventListener('click', () => handleTogglePostFlag(postId, 'isPinned', !post.isPinned));
-                            if (featureBtn) featureBtn.addEventListener('click', () => handleTogglePostFlag(postId, 'isFeatured', !post.isFeatured));
+                            document.getElementById('delete-post-btn').addEventListener('click', () => handleDeletePost(postId));
+                            document.getElementById('toggle-pin-btn').addEventListener('click', () => handleTogglePostFlag(postId, 'isPinned', !post.isPinned));
+                            document.getElementById('toggle-feature-btn').addEventListener('click', () => handleTogglePostFlag(postId, 'isFeatured', !post.isFeatured));
                         }
                     } else {
                         postDetailContentEl.innerHTML = '<p class="text-red-500">錯誤：找不到這篇帖子。</p>';
@@ -1239,20 +1360,16 @@
 
                 const repliesRef = collection(db, 'forum_posts', postId, 'replies');
                 
-                // (*** 修正 ***) 
-                // 暫時移除 'isFeaturedReply' 排序，以避免索引錯誤。
+                // (*** 修改 ***) 
                 // 永久修正：請前往 Firebase -> Firestore -> 索引 -> 建立索引
                 // 集合: forum_posts/{postId}/replies, 欄位1: isFeaturedReply (遞減), 欄位2: createdAt (遞增)
-                // const q = query(repliesRef, orderBy('isFeaturedReply', 'desc'), orderBy('createdAt', 'asc'));
-
-                // (*** 修正 ***) 暫時使用單一排序
-                const q = query(repliesRef, orderBy('createdAt', 'asc'));
+                const q = query(repliesRef, orderBy('isFeaturedReply', 'desc'), orderBy('createdAt', 'asc'));
                 
                 unsubscribeReplies = onSnapshot(q, (snapshot) => {
                     renderReplies(snapshot.docs, postId);
                 }, (error) => {
                     console.error("監聽回覆失敗:", error);
-                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}。請檢查 Firebase 索引設定。</p>`;
+                    repliesListContainerEl.innerHTML = `<p class="text-red-500">無法載入回覆：${error.message}。<b>請檢查 Firebase 索引設定。</b></p>`;
                 });
             }
             
@@ -1278,7 +1395,7 @@
                     let adminBtnHTML = '';
                     if (currentUserRole === 'admin') {
                         adminBtnHTML = `
-                            <button data-postid="${postId}" data-replyid="${replyId}" data-currentval="${reply.isFeaturedReply || false}" class="toggle-feature-reply-btn text-xs font-medium py-1 px-2 rounded-full ${reply.isFeaturedReply ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-700'} hover:opacity-80 ml-4">
+                            <button data-postid="${postId}" data-replyid="${replyId}" data-currentval="${reply.isFeaturedReply}" class="toggle-feature-reply-btn text-xs font-medium py-1 px-2 rounded-full ${reply.isFeaturedReply ? 'bg-blue-400 text-white' : 'bg-blue-100 text-blue-700'} hover:opacity-80 ml-4">
                                 ${reply.isFeaturedReply ? '取消精選' : '設為精選'}
                             </button>
                             <button data-postid="${postId}" data-replyid="${replyId}" class="delete-reply-btn text-red-500 hover:underline text-xs ml-2">刪除</button>
@@ -1337,18 +1454,12 @@
                     return;
                 }
                 
-                // (*** 修正 ***) 獲取關聯資料 (單一下拉選單)
-                const selectedFullDept = postLinkDeptEl.value;
+                // (*** 修改 ***) 獲取關聯資料 (來自單一下拉選單)
+                const linkedDeptValue = postLinkDeptEl.value;
                 let linkedData = {};
-                if (selectedFullDept) {
-                    const [school, dept] = selectedFullDept.split(' - ');
-                    // (*** 修正 ***) 使用 .trim() 後的索引
-                    const row = allDataRows.find(r => 
-                        r[schoolDataCache.schoolColIdx] && r[schoolDataCache.deptColIdx] &&
-                        r[schoolDataCache.schoolColIdx].trim() === school && 
-                        r[schoolDataCache.deptColIdx].trim() === dept
-                    );
-                    
+                if (linkedDeptValue) {
+                    const [school, dept] = linkedDeptValue.split(' - ');
+                    const row = allDataRows.find(r => r[schoolDataCache.schoolColIdx] === school && r[schoolDataCache.deptColIdx] === dept);
                     if (row) {
                         linkedData = {
                             linkedSchoolName: school,
@@ -1371,7 +1482,9 @@
                         category: category,
                         ...linkedData, // (*** 新增 ***)
                         isPinned: false, // (*** 新增 ***)
+                        pinnedAt: null,  // (*** 新增 ***)
                         isFeatured: false, // (*** 新增 ***)
+                        replyCount: 0,   // (*** 新增 ***)
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
                         authorDisplayName: currentUserDisplayName,
@@ -1388,7 +1501,7 @@
             }
             
             /**
-             * (*** 修改 ***) 處理：發表新回覆
+             * (*** 修改 ***) 處理：發表新回覆 (並更新父帖子)
              */
             async function handleCreateReply(event) {
                 event.preventDefault();
@@ -1401,16 +1514,23 @@
                 submitReplyBtn.querySelector('span:not(.hidden)').textContent = '送出中...';
                 
                 try {
+                    // 1. 新增回覆
                     const repliesRef = collection(db, 'forum_posts', currentPostId, 'replies');
-                    // (*** 修改 ***) 加入新欄位
                     await addDoc(repliesRef, {
                         content: content,
-                        isFeaturedReply: false, // (*** 新增 ***)
+                        isFeaturedReply: false, 
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
                         authorDisplayName: currentUserDisplayName,
                         authorUid: userId
                     });
+                    
+                    // 2. (*** 新增 ***) 更新父帖子的回覆數
+                    const postRef = doc(db, 'forum_posts', currentPostId);
+                    await updateDoc(postRef, {
+                        replyCount: increment(1)
+                    });
+                    
                     newReplyFormEl.reset(); // 清空回覆框
                 } catch (e) {
                     console.error("發表回覆失敗:", e);
@@ -1422,20 +1542,24 @@
             }
             
             /**
-             * (*** 新增 ***) 處理：切換帖子標記 (置頂/精選)
+             * (*** 修改 ***) 處理：切換帖子標記 (置頂/精選)
              */
             async function handleTogglePostFlag(postId, flagName, newValue) {
                 if (currentUserRole !== 'admin') return;
                 
                 const postRef = doc(db, 'forum_posts', postId);
                 try {
-                    await updateDoc(postRef, {
-                        [flagName]: newValue
-                    });
+                    // (*** 修改 ***) 置頂時，更新 pinnedAt
+                    let updateData = { [flagName]: newValue };
+                    if (flagName === 'isPinned') {
+                        updateData.pinnedAt = newValue ? serverTimestamp() : null;
+                    }
+                    
+                    await updateDoc(postRef, updateData);
                     // onSnapshot 會自動更新 UI
                 } catch (e) {
                     console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}。請檢查 Firestore 安全規則。`);
+                    alert(`更新失敗：${e.message}`);
                 }
             }
 
@@ -1453,7 +1577,7 @@
                     // onSnapshot 會自動更新 UI
                 } catch (e) {
                     console.error(`更新 ${flagName} 失敗:`, e);
-                    alert(`更新失敗：${e.message}。請檢查 Firestore 安全規則。`);
+                    alert(`更新失敗：${e.message}`);
                 }
             }
 
@@ -1462,7 +1586,8 @@
              */
             async function handleDeletePost(postId) {
                 if (currentUserRole !== 'admin') return;
-                if (!confirm('您確定要刪除這整篇帖子嗎？\n（注意：這目前不會刪除底下的回覆，但會使它們無法被讀取）')) return;
+                // (*** 警告：此操作目前不會刪除子集合的回覆 ***)
+                if (!confirm('您確定要刪除這整篇帖子嗎？\n（注意：這目前不會自動刪除底下的回覆）')) return;
                 
                 try {
                     await deleteDoc(doc(db, 'forum_posts', postId));
@@ -1481,26 +1606,42 @@
                 if (!confirm('您確定要刪除這則回覆嗎？')) return;
                 
                 try {
+                    // 1. 刪除回覆
                     await deleteDoc(doc(db, 'forum_posts', postId, 'replies', replyId));
+                    
+                    // 2. (*** 新增 ***) 更新父帖子的回覆數 (-1)
+                    const postRef = doc(db, 'forum_posts', postId);
+                    await updateDoc(postRef, {
+                        replyCount: increment(-1)
+                    });
                     // onSnapshot 會自動更新 UI
                 } catch (e) {
                     console.error("刪除回覆失敗:", e);
                     alert(`刪除失敗：${e.message}`);
                 }
             }
-
-            // --- (*** 討論區事件綁定 ***) ---
-            if (showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            if (cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
-            if (backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
-            if (backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
-            if (newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
-            if (newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
-            // (*** 修正 ***) 關聯校系下拉選單事件
-            if (postLinkDeptEl) postLinkDeptEl.addEventListener('change', handleLinkedDeptChange);
             
+            // --- (*** 新增 ***) 討論區 UI 綁定 ---
+            showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            cancelPostBtn.addEventListener('click', () => showView('main'));
+            backToMainBtn1.addEventListener('click', () => showView('main'));
+            backToMainBtn2.addEventListener('click', () => showView('main'));
+            newPostFormEl.addEventListener('submit', handleCreatePost);
+            newReplyFormEl.addEventListener('submit', handleCreateReply);
 
-            // --- (以下是篩選和 UI 邏輯，大部分不變) ---
+            // (*** 新增 ***) 討論區篩選器事件
+            toggleForumFilterBtn.addEventListener('click', () => {
+                forumFilterControlsEl.classList.toggle('collapsed');
+                const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
+                toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
+            });
+            // 綁定所有篩選 input 的 'input' 或 'change' 事件
+            forumFilterInputs.forEach(input => {
+                input.addEventListener('input', renderFilteredPostList);
+                input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
+            });
+
+            // --- (*** 修改 ***) 篩選器和 UI 邏輯 ---
 
             /**
              * 建立可用的欄位列表
@@ -1511,6 +1652,104 @@
                     index: index
                 }));
             }
+
+            /**
+             * (*** 修改 ***) 處理校系資料快取 (去除空白和重複)
+             */
+            function processSchoolDataCache() {
+                // 找到欄位索引
+                schoolDataCache.schoolColIdx = allHeaders.findIndex(h => h && h.trim() === "學校");
+                schoolDataCache.deptColIdx = allHeaders.findIndex(h => h && h.trim() === "校系名稱");
+                schoolDataCache.col112Idx = allHeaders.findIndex(h => h && h.trim() === "112分發結果");
+                schoolDataCache.col113Idx = allHeaders.findIndex(h => h && h.trim() === "113分發結果");
+
+                if (schoolDataCache.schoolColIdx === -1 || schoolDataCache.deptColIdx === -1) {
+                    console.warn("找不到 '學校' 或 '校系名稱' 欄位。關聯功能將停用。");
+                    schoolDataCache.linkedDeptList = [];
+                    return;
+                }
+
+                const uniqueDeptSet = new Set();
+                schoolDataCache.linkedDeptList = [];
+
+                allDataRows.forEach(row => {
+                    const school = row[schoolDataCache.schoolColIdx] ? row[schoolDataCache.schoolColIdx].trim() : null;
+                    const dept = row[schoolDataCache.deptColIdx] ? row[schoolDataCache.deptColIdx].trim() : null;
+                    
+                    if (school && dept) {
+                        const uniqueKey = `${school} - ${dept}`;
+                        if (!uniqueDeptSet.has(uniqueKey)) {
+                            uniqueDeptSet.add(uniqueKey);
+                            schoolDataCache.linkedDeptList.push({
+                                text: uniqueKey,
+                                school: school,
+                                dept: dept
+                            });
+                        }
+                    }
+                });
+                
+                // (*** 新增 ***) 排序
+                schoolDataCache.linkedDeptList.sort((a, b) => a.text.localeCompare(b.text, 'zh-Hant'));
+                console.log("校系資料快取處理完畢，共", schoolDataCache.linkedDeptList.length, "筆資料");
+            }
+
+            /**
+             * (*** 修改 ***) 填充發帖表單和篩選器的下拉選單
+             */
+            function populateLinkedSchoolDropdowns() {
+                // 清空
+                postLinkDeptEl.innerHTML = '<option value="">-- 無須關聯 --</option>';
+                forumSearchLinkedDeptEl.innerHTML = '<option value="">全部校系</option>';
+
+                if (schoolDataCache.linkedDeptList.length === 0) {
+                    postLinkDeptEl.disabled = true;
+                    forumSearchLinkedDeptEl.disabled = true;
+                    return;
+                }
+                
+                postLinkDeptEl.disabled = false;
+                forumSearchLinkedDeptEl.disabled = false;
+
+                const optionsHTML = schoolDataCache.linkedDeptList
+                    .map(item => `<option value="${item.text}">${item.text}</option>`)
+                    .join('');
+                
+                postLinkDeptEl.innerHTML += optionsHTML;
+                forumSearchLinkedDeptEl.innerHTML += optionsHTML;
+                
+                // (*** 新增 ***) 載入 localStorage 中儲存的篩選值
+                loadFilters();
+            }
+
+            /**
+             * (*** 修改 ***) 綁定關聯校系下拉選單的 change 事件
+             */
+            postLinkDeptEl.addEventListener('change', () => {
+                const selectedValue = postLinkDeptEl.value;
+                if (!selectedValue) {
+                    postLinkPreviewEl.classList.add('hidden');
+                    return;
+                }
+
+                const [school, dept] = selectedValue.split(' - ');
+                const row = allDataRows.find(r => 
+                    r[schoolDataCache.schoolColIdx] === school && 
+                    r[schoolDataCache.deptColIdx] === dept
+                );
+                
+                if (row) {
+                    postLinkPreviewEl.innerHTML = `
+                        <strong>關聯資料預覽:</strong><br>
+                        112分發結果: ${row[schoolDataCache.col112Idx] || 'N/A'}<br>
+                        113分發結果: ${row[schoolDataCache.col113Idx] || 'N/A'}
+                    `;
+                    postLinkPreviewEl.classList.remove('hidden');
+                } else {
+                    postLinkPreviewEl.classList.add('hidden');
+                }
+            });
+
 
             /**
              * 顯示前 12 筆資料 (第 2-9 欄) 作為預覽
@@ -1798,25 +2037,23 @@
              * (修改) 清除所有條件組
              */
             function clearAllFilters(showPreview = true) {
-                if (filterGroupsContainerEl) { // (*** 新增 ***) 檢查元素是否存在
-                    filterGroupsContainerEl.innerHTML = '';
-                    // (*** 修改 ***) 只有在有欄位可選時才新增
-                    if(availableColumns.length > 0) {
-                         addFilterGroup(); // 新增第一個預設群組
-                    }
+                filterGroupsContainerEl.innerHTML = '';
+                // (*** 修改 ***) 只有在有欄位可選時才新增
+                if(availableColumns.length > 0) {
+                     addFilterGroup(); // 新增第一個預設群組
                 }
                 
                 if (showPreview && allDataRows.length > 0) {
                     displayInitialPreview(); // 顯示預覽
                 } else if (currentUserRole === 'admin' && allDataRows.length === 0) {
-                    if (resultsOutputEl) resultsOutputEl.innerHTML = '資料庫為空或資料已清除。請上傳檔案。';
+                    resultsOutputEl.innerHTML = '資料庫為空或資料已清除。請上傳檔案。';
                 } else if (currentUserRole === 'user' && allDataRows.length === 0) {
-                     if (resultsOutputEl) resultsOutputEl.innerHTML = '目前資料庫中沒有資料。請等待管理者上傳。';
+                     resultsOutputEl.innerHTML = '目前資料庫中沒有資料。請等待管理者上傳。';
                 } else if (!currentUserRole) {
-                    if (resultsOutputEl) resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; // 登出時
+                    resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; // 登出時
                 }
 
-                if (exportButtonEl) exportButtonEl.classList.add('hidden');
+                exportButtonEl.classList.add('hidden');
                 currentExportData = null;
                 updateFilterChips(); // 清除標籤
             }
@@ -2039,7 +2276,6 @@
                 
                 colNames.forEach(name => {
                     const trimmedName = name.trim();
-                    // (*** 修正 ***) 處理 header 是 null 或 undefined 的情況
                     const index = allHeaders.findIndex(header => 
                         (header === null || header === undefined) ? false : header.trim() === trimmedName
                     );
@@ -2097,7 +2333,6 @@
              * (更新) 更新篩選條件標籤 (Chips)
              */
             function updateFilterChips() {
-                if (!filterChipsContainerEl) return; // (*** 新增 ***) 檢查元素
                 filterChipsContainerEl.innerHTML = '';
                 if (activeFilters.length === 0) {
                     filterChipsContainerEl.classList.add('hidden');
@@ -2207,30 +2442,46 @@
                 }
             }
 
-            // --- (*** 篩選器事件綁定 ***) ---
-            if (fileInputEl) fileInputEl.addEventListener('change', handleFile);
-            if (filterButtonEl) filterButtonEl.addEventListener('click', applyFilter);
-            if (exportButtonEl) exportButtonEl.addEventListener('click', exportResults);
-            if (addFilterBtnEl) addFilterBtnEl.addEventListener('click', () => addFilterGroup());
-            if (clearFiltersBtnEl) clearFiltersBtnEl.addEventListener('click', () => clearAllFilters(true));
-
-
-            // --- (*** 討論區事件綁定 ***) ---
-            if (showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
-            if (cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
-            if (backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
-            if (backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
-            if (newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
-            if (newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
-            // (*** 修正 ***) 關聯校系下拉選單事件
-            if (postLinkDeptEl) postLinkDeptEl.addEventListener('change', handleLinkedDeptChange);
+            // --- (修改) 綁定事件 ---
             
+            // 檔案上傳
+            if(fileInputEl) fileInputEl.addEventListener('change', handleFile);
+
+            // 篩選器按鈕
+            if(filterButtonEl) filterButtonEl.addEventListener('click', applyFilter);
+            if(exportButtonEl) exportButtonEl.addEventListener('click', exportResults);
+            if(addFilterBtnEl) addFilterBtnEl.addEventListener('click', () => addFilterGroup());
+            if(clearFiltersBtnEl) clearFiltersBtnEl.addEventListener('click', () => clearAllFilters(true));
+
+            // (*** 新增 ***) 討論區 UI 綁定
+            if(showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
+            if(cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
+            if(backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
+            if(backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
+            if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
+            if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
+
+            // (*** 新增 ***) 討論區篩選器事件
+            if (toggleForumFilterBtn) {
+                toggleForumFilterBtn.addEventListener('click', () => {
+                    forumFilterControlsEl.classList.toggle('collapsed');
+                    const isCollapsed = forumFilterControlsEl.classList.contains('collapsed');
+                    toggleForumFilterBtn.textContent = isCollapsed ? '顯示篩選' : '隱藏篩選';
+                });
+            }
+            // 綁定所有篩選 input 的 'input' 或 'change' 事件
+            forumFilterInputs.forEach(input => {
+                if (input) {
+                    input.addEventListener('input', renderFilteredPostList);
+                    input.addEventListener('change', renderFilteredPostList); // 確保 select 也觸發
+                }
+            });
+
 
             // (*** 新增 ***) 啟動 Firebase 初始化
             initializeAppAndAuth();
         
         }); // 結束 DOMContentLoaded
-
     </script>
 
 </body>
