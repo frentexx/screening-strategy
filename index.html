@@ -227,6 +227,15 @@
             white-space: pre-wrap; /* 保持換行和空格 */
             word-wrap: break-word; /* 長單字換行 */
         }
+
+        /* 開關 Toggle Switch 樣式 */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #68D391;
+        }
         
     </style>
 </head>
@@ -275,21 +284,32 @@
         <!-- 主要應用程式視圖 (包含篩選器和論壇列表) -->
         <main id="main-app-view" class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
 
-            <!-- 檔案上傳區 -->
+            <!-- 檔案上傳區 (僅限管理者) -->
             <section id="upload-section" class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-3">1. 上傳資料 (僅限管理者)</h2>
+                <h2 class="text-xl font-semibold text-gray-800 mb-3">1. 管理員功能</h2>
                 <!-- 改為白底 + 淡藍邊框 -->
-                <div class="flex flex-col items-center p-6 bg-white border-2 border-dashed border-blue-200 rounded-2xl">
-                    <!-- 自訂按鈕 (套用 .btn-upload) -->
-                    <label class="file-input-wrapper btn-upload" for="file-input">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2 align-middle" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        <span class="align-middle">選擇 .xlsx 或 .csv 檔案</span>
-                        <!-- 隱藏的實際 input -->
-                        <input type="file" id="file-input" accept=".xlsx, .csv" class="hidden">
-                    </label>
-                    <span id="file-name" class="mt-3 text-sm text-gray-500">未選擇任何檔案</span>
+                <div class="flex flex-col items-center p-6 bg-white border-2 border-dashed border-blue-200 rounded-2xl gap-4">
+                    <!-- 上傳檔案 -->
+                    <div class="w-full text-center">
+                        <label class="file-input-wrapper btn-upload" for="file-input">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2 align-middle" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span class="align-middle">更新資料庫 (.xlsx)</span>
+                            <input type="file" id="file-input" accept=".xlsx, .csv" class="hidden">
+                        </label>
+                        <p id="file-name" class="mt-2 text-sm text-gray-500">未選擇任何檔案</p>
+                    </div>
+
+                    <!-- 留言板開關 -->
+                    <div class="w-full border-t pt-4 flex items-center justify-center gap-3">
+                        <span class="font-medium text-gray-700">留言板功能：</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" name="toggle" id="forum-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300"/>
+                            <label for="forum-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                        <span id="forum-status-text" class="text-sm font-bold text-gray-500">已關閉</span>
+                    </div>
                 </div>
             </section>
 
@@ -348,7 +368,7 @@
             </section>
 
             <!-- 討論區區塊 -->
-            <section id="forum-section" class="mt-8 pt-8 border-t border-gray-200">
+            <section id="forum-section" class="mt-8 pt-8 border-t border-gray-200 hidden">
                 <!-- 標題 和 發帖按鈕 -->
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800">💬 討論區</h2>
@@ -406,6 +426,12 @@
                     <p class="text-gray-500">正在載入帖子...</p>
                     <!-- 帖子列表將由 JS 動態插入 -->
                 </div>
+            </section>
+            
+            <!-- 留言板關閉時的提示 (非管理員) -->
+            <section id="forum-disabled-msg" class="mt-8 pt-8 border-t border-gray-200 hidden text-center">
+                <h2 class="text-2xl font-semibold text-gray-400 mb-2">💬 討論區</h2>
+                <p class="text-gray-500 bg-gray-100 py-6 rounded-xl">討論區目前關閉中。</p>
             </section>
 
         </main>
@@ -565,6 +591,8 @@
             const filterChipsContainerEl = document.getElementById('filter-chips-container');
             
             // 討論區 DOM 元素
+            const forumSectionEl = document.getElementById('forum-section');
+            const forumDisabledMsgEl = document.getElementById('forum-disabled-msg');
             const showNewPostFormBtn = document.getElementById('show-new-post-form-btn');
             const postListContainerEl = document.getElementById('post-list-container');
             // 發帖表單
@@ -594,6 +622,10 @@
             const forumSearchLinkedDeptEl = document.getElementById('forum-search-linked-dept');
             const forumFilterInputs = [forumSearchKeywordEl, forumSearchCategoryEl, forumSearchStatusEl, forumSearchLinkedDeptEl];
 
+            // 管理員開關
+            const forumToggle = document.getElementById('forum-toggle');
+            const forumStatusText = document.getElementById('forum-status-text');
+
 
             // 全域變數儲存資料
             let allHeaders = [];
@@ -615,8 +647,10 @@
             // Firebase 全域變數
             let app, db, auth;
             let userId = null;
-            let schoolDataDocRef = null; // 指向公用資料的
-            let unsubscribeData = null; // 用於取消監聽
+            let schoolDataDocRef = null; 
+            let systemSettingsRef = null; // 系統設定
+            let unsubscribeData = null; 
+            let unsubscribeSettings = null; // 系統設定監聽
             
             // 討論區 Firebase 變數
             let forumPostsRef = null;
@@ -630,6 +664,8 @@
             let postsCache = [];
             let forumFilters = {}; 
 
+            // 系統設定
+            let isForumEnabled = false; // 預設關閉
 
             // Firebase 設定
             const firebaseConfig = {
@@ -694,11 +730,16 @@
                     uploadSectionEl.classList.remove('hidden');
                     resultsOutputEl.innerHTML = '請上傳檔案或等待資料庫載入...';
                     userDisplayEl.textContent = `管理者 (${userEmail}) 已登入`;
+                    // 管理者永遠可以看見開關
+                    forumToggle.disabled = false;
                 } else { // 'user'
                     uploadSectionEl.classList.add('hidden');
                     resultsOutputEl.innerHTML = '正在從資料庫載入資料...';
                     userDisplayEl.textContent = `使用者 (${userEmail}) 已登入`;
                 }
+                
+                // 更新留言板可見性
+                updateForumVisibility();
             }
 
             /**
@@ -710,18 +751,10 @@
                 currentUserDisplayName = null;
 
                 // 停止監聽
-                if (unsubscribeData) {
-                    unsubscribeData();
-                    unsubscribeData = null;
-                }
-                if (unsubscribeForumPosts) {
-                    unsubscribeForumPosts();
-                    unsubscribeForumPosts = null;
-                }
-                if (unsubscribeReplies) {
-                    unsubscribeReplies();
-                    unsubscribeReplies = null;
-                }
+                if (unsubscribeData) { unsubscribeData(); unsubscribeData = null; }
+                if (unsubscribeSettings) { unsubscribeSettings(); unsubscribeSettings = null; }
+                if (unsubscribeForumPosts) { unsubscribeForumPosts(); unsubscribeForumPosts = null; }
+                if (unsubscribeReplies) { unsubscribeReplies(); unsubscribeReplies = null; }
 
                 // 切換回主視圖
                 showView('main');
@@ -815,10 +848,9 @@
                     db = getFirestore(app);
                     auth = getAuth(app);
                     
-                    // setLogLevel('debug'); // 開啟日誌
-
                     // 簡化路徑
                     schoolDataDocRef = doc(db, 'public_data', 'school_data');
+                    systemSettingsRef = doc(db, 'public_data', 'system_settings');
                     forumPostsRef = collection(db, 'forum_posts');
 
                     // 核心認證邏輯
@@ -832,6 +864,9 @@
                             currentUserEmail = userEmail;
                             currentUserDisplayName = user.displayName || userEmail.split('@')[0];
                             
+                            // 開始監聽系統設定
+                            listenForSystemSettings();
+
                             if (userEmail === 'fuwen@ppsh.ptc.edu.tw') {
                                 // 管理者
                                 console.log("管理者登入:", userId, userEmail);
@@ -866,6 +901,90 @@
                     if (resultsOutputEl) {
                         resultsOutputEl.innerHTML = `Firebase 初始化失敗: ${e.message}。請刷新頁面。`;
                     }
+                }
+            }
+
+            /**
+             * 監聽系統設定 (留言板開關)
+             */
+            function listenForSystemSettings() {
+                if (unsubscribeSettings) unsubscribeSettings();
+
+                unsubscribeSettings = onSnapshot(systemSettingsRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        isForumEnabled = data.forumEnabled === true; // 預設為 false
+                    } else {
+                        isForumEnabled = false; // 若檔案不存在，預設關閉
+                    }
+                    
+                    // 更新 UI
+                    updateForumUIState();
+                }, (error) => {
+                    console.error("監聽系統設定失敗:", error);
+                });
+            }
+
+            /**
+             * 更新留言板 UI 狀態 (開關顯示 & 留言板可見性)
+             */
+            function updateForumUIState() {
+                // 更新開關狀態
+                forumToggle.checked = isForumEnabled;
+                if (isForumEnabled) {
+                    forumStatusText.textContent = "已開啟";
+                    forumStatusText.classList.remove('text-gray-500');
+                    forumStatusText.classList.add('text-green-500');
+                } else {
+                    forumStatusText.textContent = "已關閉";
+                    forumStatusText.classList.remove('text-green-500');
+                    forumStatusText.classList.add('text-gray-500');
+                }
+
+                updateForumVisibility();
+            }
+
+            /**
+             * 控制留言板區塊的可見性
+             */
+            function updateForumVisibility() {
+                if (!currentUserRole) return; // 尚未登入
+
+                if (currentUserRole === 'admin') {
+                    // 管理者：永遠可見
+                    forumSectionEl.classList.remove('hidden');
+                    forumDisabledMsgEl.classList.add('hidden');
+                } else {
+                    // 一般使用者：依據設定
+                    if (isForumEnabled) {
+                        forumSectionEl.classList.remove('hidden');
+                        forumDisabledMsgEl.classList.add('hidden');
+                    } else {
+                        forumSectionEl.classList.add('hidden');
+                        forumDisabledMsgEl.classList.remove('hidden');
+                    }
+                }
+            }
+
+            /**
+             * 切換留言板狀態 (寫入資料庫)
+             */
+            async function toggleForumStatus() {
+                if (currentUserRole !== 'admin') return;
+
+                const newState = forumToggle.checked;
+                // UI 會由 onSnapshot 更新，這裡先不做 UI 變動，防止不同步
+                
+                try {
+                    await setDoc(systemSettingsRef, {
+                        forumEnabled: newState
+                    }, { merge: true });
+                    console.log("留言板狀態已更新為:", newState);
+                } catch (e) {
+                    console.error("更新留言板狀態失敗:", e);
+                    alert("更新失敗：" + e.message);
+                    // 失敗時回復開關狀態
+                    forumToggle.checked = !newState;
                 }
             }
             
@@ -1487,36 +1606,42 @@
             // --- 篩選器和 UI 邏輯 ---
 
             /**
-             * (修改) 建立可用的欄位列表，並依照指定順序排列
+             * (修正) 建立可用的欄位列表，並依照指定順序排列
              */
             function populateAvailableColumns() {
-                // 定義您要求的優先排序清單
+                // 定義您要求的優先排序清單 (注意: 必須完全符合 Excel 標頭)
                 const priorityOrder = [
                     "校系代碼", "學校", "校系名稱",
+                    // 114
                     "114原住民外加名額", "114預計通過一階人數", "114通過一階外加", "114正取人數", "114備取人數", "114分發結果", "114分發最低標準",
+                    // 113
                     "113原住民外加名額", "113預計通過一階人數", "113通過一階外加", "113正取人數", "113備取人數", "113分發結果", "113分發最低標準",
+                    // 112
                     "112原住民外加名額", "112預計通過一階人數", "112通過一階外加", "112正取人數", "112備取人數", "112分發結果", "112分發最低標準"
                 ];
 
                 // 先將原始欄位轉為物件
                 let cols = allHeaders.map((header, index) => ({
-                    name: (header || "").trim() || `(第 ${index + 1} 欄)`,
-                    index: index
-                }));
+                    name: (header || "").trim(),
+                    index: index,
+                    originalName: header || `(第 ${index + 1} 欄)`
+                })).filter(c => c.name !== ""); // 過濾空標頭
 
                 // 根據優先清單進行排序
                 availableColumns = cols.sort((a, b) => {
                     let indexA = priorityOrder.indexOf(a.name);
                     let indexB = priorityOrder.indexOf(b.name);
 
-                    // 如果欄位不在優先清單中，排在最後面
-                    if (indexA === -1) indexA = 999;
-                    if (indexB === -1) indexB = 999;
+                    // 如果找到，使用 priorityOrder 的索引
+                    // 如果沒找到 (-1)，給一個很大的數字放到最後
+                    if (indexA === -1) indexA = 9999;
+                    if (indexB === -1) indexB = 9999;
 
                     if (indexA !== indexB) {
                         return indexA - indexB;
                     }
-                    return a.index - b.index; // 若都不在清單中，按原始索引排
+                    // 如果都不在優先清單中，按原始順序排
+                    return a.index - b.index;
                 });
             }
 
@@ -1738,7 +1863,7 @@
                             <label class="block text-sm font-medium text-gray-600 mb-1">欄位 (左)</label>
                             <select class="filter-column w-full p-2 form-input-style">
                                 <option value="">-- 選擇欄位 --</option>
-                                ${availableColumns.map(col => `<option value="${col.index}">${col.name}</option>`).join('')}
+                                ${availableColumns.map(col => `<option value="${col.index}">${col.originalName}</option>`).join('')}
                             </select>
                         </div>
                         <!-- 運算子 -->
@@ -1790,7 +1915,7 @@
                             <label class="block text-sm font-medium text-gray-600 mb-1">選擇欄位</label>
                             <select class="filter-value-column w-full p-2 form-input-style">
                                 <option value="">-- 選擇欄位 --</option>
-                                ${availableColumns.map(col => `<option value="${col.index}">${col.name}</option>`).join('')}
+                                ${availableColumns.map(col => `<option value="${col.index}">${col.originalName}</option>`).join('')}
                             </select>
                         </div>
                     </div>
@@ -2119,7 +2244,7 @@
             }
 
             /**
-             * (重寫) 顯示篩選後的結果 (格式化表格)
+             * (重寫) 顯示篩選後的結果 (鎖定欄位)
              */
             function displayResults(rows, message = null) {
                 resultsOutputEl.innerHTML = ''; // 清空結果
@@ -2327,6 +2452,9 @@
             if(backToMainBtn2) backToMainBtn2.addEventListener('click', () => showView('main'));
             if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
             if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
+            
+            // 留言板開關
+            if(forumToggle) forumToggle.addEventListener('change', toggleForumStatus);
 
             // 討論區篩選器事件 (綁定 debounce 版本的函式)
             forumFilterInputs.forEach(input => {
