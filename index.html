@@ -9,8 +9,7 @@
     <!-- 載入 SheetJS (xlsx) 函式庫 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-    <!-- (*** 修改 ***) 更新 Firebase SDK (包含 Google Auth) -->
-    <!-- (*** 修正 ***) 修正 type="module" 拼寫錯誤 -->
+    <!-- 更新 Firebase SDK (包含 Google Auth) -->
     <script type="module" src="https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js"></script>
@@ -45,7 +44,6 @@
             border-radius: 1rem;
             box-shadow: 0 4px 10px rgba(61,178,255,0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            /* (*** 修改 ***) 增加 Padding (增加垂直高度) */
             padding: 1rem 1.75rem; 
             font-weight: 600;
         }
@@ -177,7 +175,7 @@
             display: none !important;
         }
 
-        /* (*** 修改 ***) 討論區樣式 */
+        /* 討論區樣式 */
         .post-item {
             border: 1px solid #E5E7EB; /* gray-200 */
             border-radius: 12px;
@@ -185,7 +183,6 @@
             background-color: #FFFFFF;
             transition: all 0.3s ease;
         }
-        /* (*** 移除 ***) .pinned 樣式已移除 */
         .post-item:hover {
             border-color: #3DB2FF;
             box-shadow: 0 4px 10px rgba(61,178,255,0.1);
@@ -203,7 +200,7 @@
             font-size: 0.875rem; /* text-sm */
             color: #6B7280; /* gray-500 */
         }
-        /* (*** 新增 ***) 標籤樣式 */
+        /* 標籤樣式 */
         .post-tag {
             display: inline-block;
             font-size: 0.75rem; /* text-xs */
@@ -211,9 +208,8 @@
             padding: 0.2rem 0.6rem;
             border-radius: 9999px; /* rounded-full */
             margin-right: 0.5rem;
-            margin-bottom: 0.25rem; /* (*** 新增 ***) 換行間距 */
+            margin-bottom: 0.25rem; /* 換行間距 */
         }
-        /* (*** 移除 ***) .tag-pinned, .tag-featured 樣式已移除 */
         .tag-category { background-color: #E0E7FF; color: #3730A3; } /* indigo */
         .tag-linked { background-color: #D1FAE5; color: #065F46; } /* green */
         
@@ -222,7 +218,6 @@
             padding-top: 1.25rem;
             padding-bottom: 1.25rem;
         }
-        /* (*** 移除 ***) .featured-reply 樣式已移除 */
         .reply-item:first-child {
             border-top: none;
         }
@@ -233,16 +228,14 @@
             word-wrap: break-word; /* 長單字換行 */
         }
         
-        /* (*** 移除 ***) 折疊區域動畫 (已不需要) */
-
     </style>
 </head>
 <body class="bg-gray-50">
 
-    <!-- (*** 修改 ***) 登入容器，移除 Logo，更新標題 -->
+    <!-- 登入容器 -->
     <div id="login-container" class="container mx-auto p-4 md:p-8 max-w-md mt-10 md:mt-16">
         
-        <!-- (*** 修改 ***) 網站標題 (移除 Logo) -->
+        <!-- 網站標題 -->
         <div class="text-center mb-6">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-800">小清華原民班</h1>
             <h2 class="text-xl md:text-2xl font-semibold text-gray-700">志願選填輔助網站</h2>
@@ -250,15 +243,15 @@
 
         <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
             <p class="text-center text-gray-700 font-medium mb-2">請使用 @ppsh.ptc.edu.tw 網域帳號登入</p>
-            <!-- (*** 新增 ***) 使用範圍說明 -->
+            <!-- 使用範圍說明 -->
             <p class="text-center text-gray-500 text-sm mb-6">
                 本網站僅供小清華原民班師生使用，<br>非屏北高中網域帳號無法登入。
             </p>
             <div class="space-y-4">
-                <!-- (*** 修改 ***) Google 登入按鈕 (修正排版，移除 !py-3) -->
+                <!-- Google 登入按鈕 -->
                 <button id="google-login-btn" class="btn-upload w-full !rounded-xl flex items-center justify-center gap-3">
                     <svg class="w-6 h-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C39.756 34.927 44 28.159 44 20c0-1.341-.138-2.65-.389-3.917z"></path></svg>
-                    <!-- (*** 新增 ***) span 和 nowrap 確保同一行 -->
+                    <!-- span 和 nowrap 確保同一行 -->
                     <span class="whitespace-nowrap">
                         使用 Google 帳號登入
                         <span class="text-xs opacity-80">（限本校帳號）</span>
@@ -269,20 +262,20 @@
         </main>
     </div>
 
-    <!-- (修改) 主要應用容器，預設隱藏 -->
+    <!-- 主要應用容器，預設隱藏 -->
     <div id="app-container" class="container mx-auto p-4 md:p-8 max-w-7xl hidden">
         
-        <!-- (修改) 標題，加入 relative 和登出按鈕 -->
+        <!-- 標題，加入 relative 和登出按鈕 -->
         <header class="text-center mb-8 relative">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800">升學資料篩選策略</h1>
             <p id="user-display" class="text-gray-600 mt-1"></p>
             <button id="logout-btn" class="absolute top-0 right-0 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-xl transition duration-300">登出</button>
         </header>
 
-        <!-- (*** 修改 ***) 主要應用程式視圖 (包含篩選器和論壇列表) -->
+        <!-- 主要應用程式視圖 (包含篩選器和論壇列表) -->
         <main id="main-app-view" class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
 
-            <!-- (修改) 檔案上傳區，加入 ID -->
+            <!-- 檔案上傳區 -->
             <section id="upload-section" class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-3">1. 上傳資料 (僅限管理者)</h2>
                 <!-- 改為白底 + 淡藍邊框 -->
@@ -304,7 +297,7 @@
             <section id="filter-controls" class="mb-6 hidden bg-gradient-to-br from-blue-50 to-green-50 p-6 rounded-2xl shadow-lg">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">🔍 篩選資料</h2>
                 
-                <!-- *** (修改) 更新的提示區塊 *** -->
+                <!-- 提示區塊 -->
                 <div class="mb-4 p-3 bg-blue-100 border border-blue-200 text-blue-800 rounded-lg text-sm" role="alert">
                     <strong class="font-semibold">💡 篩選邏輯：</strong>
                     系統會<strong>由上到下</strong>依序執行篩選條件。例如：希望邏輯為 "條件1 AND (條件2 OR 條件3)"，請將條件1移到最後設定。
@@ -343,24 +336,23 @@
                     </button>
                 </div>
 
-                <!-- 條件標籤 (Chips) 容器 (改為亮藍色) -->
+                <!-- 條件標籤 (Chips) 容器 -->
                 <div id="filter-chips-container" class="flex flex-wrap gap-2 mb-4">
                     <!-- 篩選條件標籤將由 JS 動態插入此處 -->
                 </div>
 
-                <!-- 結果表格 (改為白底) -->
+                <!-- 結果表格 -->
                 <div id="results-output" class="w-full h-96 bg-white text-gray-800 text-sm p-4 rounded-md overflow-auto border border-gray-200 shadow-inner">
                     請使用 Google 帳號登入...
                 </div>
             </section>
 
-            <!-- (*** 修改 ***) 討論區區塊 -->
+            <!-- 討論區區塊 -->
             <section id="forum-section" class="mt-8 pt-8 border-t border-gray-200">
                 <!-- 標題 和 發帖按鈕 -->
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800">💬 討論區</h2>
                     <div class="flex gap-4">
-                        <!-- (*** 移除 ***) "顯示篩選" 按鈕已移除 -->
                         <button id="show-new-post-form-btn" class="btn-add rounded-xl py-2 px-4 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block -ml-1 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -370,7 +362,7 @@
                     </div>
                 </div>
                 
-                <!-- (*** 修改 ***) 討論區篩選器 (移除 標記, 移除折疊) -->
+                <!-- 討論區篩選器 -->
                 <div id="forum-filter-controls" class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- 關鍵字 -->
@@ -418,7 +410,7 @@
 
         </main>
         
-        <!-- (*** 修改 ***) 新增帖子表單視圖 (預設隱藏) -->
+        <!-- 新增帖子表單視圖 (預設隱藏) -->
         <div id="new-post-form-view" class="hidden">
             <button id="back-to-main-btn-1" class="mb-4 text-blue-600 hover:underline font-medium">&larr; 返回列表</button>
             <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
@@ -436,7 +428,7 @@
                         </select>
                     </div>
                     
-                    <!-- (*** 修改 ***) 關聯校系 (單一下拉選單) -->
+                    <!-- 關聯校系 (單一下拉選單) -->
                     <div class="mb-4">
                         <label for="post-link-dept" class="block text-sm font-medium text-gray-700 mb-1">關聯校系 (選填)</label>
                         <select id="post-link-dept" class="w-full p-3 form-input-style">
@@ -472,7 +464,7 @@
             </main>
         </div>
         
-        <!-- (*** 修改 ***) 帖子詳情視圖 (預設隱藏) -->
+        <!-- 帖子詳情視圖 (預設隱藏) -->
         <div id="forum-detail-view" class="hidden">
             <button id="back-to-main-btn-2" class="mb-4 text-blue-600 hover:underline font-medium">&larr; 返回列表</button>
             <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8">
@@ -504,21 +496,7 @@
     </div>
 
     <script type="module">
-        // -------------------------------------------------------------------------
-        // (*** 新增 ***) 部署到 GitHub Pages 的重要提醒：
-        // 
-        // 1. 將此 index.html 檔案上傳到您的 GitHub Repository (例如 'screening-app')。
-        // 2. 在 Repository 的 Settings -> Pages 中啟用 GitHub Pages。
-        // 3. 您會得到一個網址，例如：https://[your-username].github.io/screening-app/
-        // 4. (最重要!) 請前往您的 Firebase 專案 (screening-strategy) 控制台：
-        //    Authentication -> Settings -> 已授權的網域
-        // 5. 點擊「新增網域」，然後輸入您的 GitHub Pages 網域
-        //    (例如：[your-username].github.io)
-        // 6. 如果不執行步驟 5，Google 登入將會因為 'auth/unauthorized-domain' 錯誤而失敗。
-        // -------------------------------------------------------------------------
-
-
-        // (*** 修改 ***) 載入 v9 模組化函式 (包含 Google Auth 和 討論區功能)
+        // 載入 v9 模組化函式 (包含 Google Auth 和 討論區功能)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { 
             getAuth, 
@@ -533,21 +511,21 @@
             setDoc, 
             onSnapshot, 
             setLogLevel,
-            collection,    // (*** 新增 ***)
-            addDoc,        // (*** 新增 ***)
-            serverTimestamp, // (*** 新增 ***)
-            query,         // (*** 新增 ***)
-            orderBy,       // (*** 新增 ***)
-            getDoc,        // (*** 新增 ***)
-            deleteDoc,     // (*** 新增 ***)
-            updateDoc,     // (*** 新增 ***)
-            increment,     // (*** 新增 ***)
-            where,         // (*** 新增 ***)
-            Timestamp      // (*** 新增 ***)
+            collection,    
+            addDoc,        
+            serverTimestamp, 
+            query,         
+            orderBy,       
+            getDoc,        
+            deleteDoc,     
+            updateDoc,     
+            increment,     
+            where,         
+            Timestamp      
         } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
         
-        // (*** 新增 ***) Debounce 函式
+        // Debounce 函式
         function debounce(func, wait) {
             let timeout;
             return function(...args) {
@@ -557,20 +535,19 @@
             };
         }
 
-        // (*** 修改 ***) 將所有程式碼放入 DOMContentLoaded 事件中
-        // 這確保在綁定事件時，所有 HTML 元素都已載入
+        // 將所有程式碼放入 DOMContentLoaded 事件中
         document.addEventListener('DOMContentLoaded', () => {
 
-            // (*** 修改 ***) 登入相關 DOM 元素 (移除密碼，新增 Google)
+            // 登入相關 DOM 元素
             const loginContainerEl = document.getElementById('login-container');
             const appContainerEl = document.getElementById('app-container');
-            const googleLoginBtn = document.getElementById('google-login-btn'); // (*** 新增 ***)
+            const googleLoginBtn = document.getElementById('google-login-btn'); 
             const loginErrorEl = document.getElementById('login-error');
             const logoutBtn = document.getElementById('logout-btn');
             const uploadSectionEl = document.getElementById('upload-section');
-            const userDisplayEl = document.getElementById('user-display'); // (*** 新增 ***)
+            const userDisplayEl = document.getElementById('user-display'); 
 
-            // (*** 新增 ***) 視圖切換 DOM 元素
+            // 視圖切換 DOM 元素
             const mainAppViewEl = document.getElementById('main-app-view');
             const newPostFormViewEl = document.getElementById('new-post-form-view');
             const forumDetailViewEl = document.getElementById('forum-detail-view');
@@ -587,14 +564,14 @@
             const clearFiltersBtnEl = document.getElementById('clear-filters-btn');
             const filterChipsContainerEl = document.getElementById('filter-chips-container');
             
-            // (*** 修改 ***) 討論區 DOM 元素
+            // 討論區 DOM 元素
             const showNewPostFormBtn = document.getElementById('show-new-post-form-btn');
             const postListContainerEl = document.getElementById('post-list-container');
             // 發帖表單
             const newPostFormEl = document.getElementById('new-post-form');
-            const postCategoryEl = document.getElementById('post-category'); // (*** 新增 ***)
-            const postLinkDeptEl = document.getElementById('post-link-dept'); // (*** 修改 ***)
-            const postLinkPreviewEl = document.getElementById('post-link-preview'); // (*** 新增 ***)
+            const postCategoryEl = document.getElementById('post-category'); 
+            const postLinkDeptEl = document.getElementById('post-link-dept'); 
+            const postLinkPreviewEl = document.getElementById('post-link-preview'); 
             const postTitleEl = document.getElementById('post-title');
             const postContentEl = document.getElementById('post-content');
             const cancelPostBtn = document.getElementById('cancel-post-btn');
@@ -609,8 +586,7 @@
             const backToMainBtn1 = document.getElementById('back-to-main-btn-1');
             const backToMainBtn2 = document.getElementById('back-to-main-btn-2');
             
-            // (*** 修改 ***) 討論區篩選器 DOM (移除 標記)
-            // (*** 移除 ***) toggleForumFilterBtn
+            // 討論區篩選器 DOM
             const forumFilterControlsEl = document.getElementById('forum-filter-controls');
             const forumSearchKeywordEl = document.getElementById('forum-search-keyword');
             const forumSearchCategoryEl = document.getElementById('forum-search-category');
@@ -626,13 +602,12 @@
             let currentExportData = null;
             let activeFilters = []; // 儲存當前套用的篩選條件
             
-            // (*** 修改 ***) 校系資料快取
+            // 校系資料快取
             let schoolDataCache = {
                 schoolColIdx: -1,
                 deptColIdx: -1,
                 col112Idx: -1,
                 col113Idx: -1,
-                // (*** 修改 ***) 合併為單一列表
                 linkedDeptList: [] // 儲存 { text: "學校 - 科系", school: "...", dept: "..." }
             };
 
@@ -643,21 +618,20 @@
             let schoolDataDocRef = null; // 指向公用資料的
             let unsubscribeData = null; // 用於取消監聽
             
-            // (*** 修改 ***) 討論區 Firebase 變數
+            // 討論區 Firebase 變數
             let forumPostsRef = null;
-            // (*** 修改 ***) 簡化為單一監聽
             let unsubscribeForumPosts = null; 
             let unsubscribeReplies = null;
             let currentPostId = null; // 追蹤當前查看的帖子 ID
             let currentUserEmail = null;
             let currentUserDisplayName = null;
             
-            // (*** 修改 ***) 討論區客戶端資料快取 (簡化)
-            let postsCache = []; // (*** 修改 ***)
+            // 討論區客戶端資料快取
+            let postsCache = [];
             let forumFilters = {}; 
 
 
-            // 您提供的 Firebase 設定
+            // Firebase 設定
             const firebaseConfig = {
                 apiKey: "AIzaSyDw1JOQi3lgGk-9fQbs2MbW-wJd008kqKM",
                 authDomain: "screening-strategy.firebaseapp.com",
@@ -668,10 +642,10 @@
                 measurementId: "G-GMLSW66F6F"
             };
 
-            // (修改) 登入狀態
+            // 登入狀態
             let currentUserRole = null;
             
-            // (*** 新增 ***) 視圖管理器
+            // 視圖管理器
             function showView(viewId, context = null) {
                 // 隱藏所有視圖
                 mainAppViewEl.classList.add('hidden');
@@ -689,7 +663,6 @@
                     case 'new-post':
                         newPostFormEl.reset(); // 清空表單
                         postLinkPreviewEl.classList.add('hidden'); 
-                        // populateLinkedSchoolDropdowns(); // (*** 修改 ***) 改為在啟動時載入
                         newPostFormViewEl.classList.remove('hidden');
                         break;
                     case 'detail':
@@ -706,7 +679,7 @@
             }
 
             /**
-             * (修改) 登入函式 (僅處理 UI 切換)
+             * 登入函式 (僅處理 UI 切換)
              * @param {string} role 'admin' 或 'user'
              */
             function handleLogin(role, userEmail) {
@@ -729,7 +702,7 @@
             }
 
             /**
-             * (修改) 登出函式 (僅處理 UI 重設)
+             * 登出函式 (僅處理 UI 重設)
              */
             function handleLogout() {
                 currentUserRole = null;
@@ -741,7 +714,6 @@
                     unsubscribeData();
                     unsubscribeData = null;
                 }
-                // (*** 修改 ***) 停止監聽討論區
                 if (unsubscribeForumPosts) {
                     unsubscribeForumPosts();
                     unsubscribeForumPosts = null;
@@ -751,27 +723,27 @@
                     unsubscribeReplies = null;
                 }
 
-                // (*** 新增 ***) 切換回主視圖
+                // 切換回主視圖
                 showView('main');
 
                 // 切換 UI
                 loginContainerEl.classList.remove('hidden');
                 appContainerEl.classList.add('hidden');
-                userDisplayEl.textContent = ''; // (*** 新增 ***)
+                userDisplayEl.textContent = ''; 
 
                 // 重設應用程式狀態
                 fileInputEl.value = ''; // 清除檔案輸入
                 fileNameEl.textContent = '未選擇任何檔案';
-                resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; // (*** 修改 ***)
+                resultsOutputEl.innerHTML = '請使用 Google 帳號登入...'; 
                 exportButtonEl.classList.add('hidden');
                 currentExportData = null;
                 filterControlsEl.classList.add('hidden');
                 
-                // (*** 新增 ***) 清空討論區
+                // 清空討論區
                 postListContainerEl.innerHTML = '';
                 postDetailContentEl.innerHTML = '';
                 repliesListContainerEl.innerHTML = '';
-                postsCache = []; // (*** 修改 ***)
+                postsCache = []; 
                 
                 allHeaders = [];
                 allDataRows = [];
@@ -780,7 +752,7 @@
             }
 
             /**
-             * (*** 修改 ***) Google 登入函式 (加入登入時驗證)
+             * Google 登入函式 (加入登入時驗證)
              */
             async function signInWithGoogle() {
                 if (!auth) {
@@ -791,7 +763,7 @@
 
                 const provider = new GoogleAuthProvider();
                 
-                // (*** 新增 ***) 限制登入網域
+                // 限制登入網域
                 provider.setCustomParameters({
                     'hd': 'ppsh.ptc.edu.tw'
                 });
@@ -800,7 +772,7 @@
                     loginErrorEl.textContent = '正在開啟 Google 登入視窗...';
                     const result = await signInWithPopup(auth, provider);
                     
-                    // (*** 新增 ***) 登入後立刻檢查
+                    // 登入後立刻檢查
                     const user = result.user;
                     const userEmail = user.email || '';
                     
@@ -816,7 +788,6 @@
                 } catch (error) {
                     console.error("Google 登入失敗:", error);
                     
-                    // (*** 修改 ***) 動態顯示錯誤網域
                     if (error.code === 'auth/unauthorized-domain') {
                         const currentDomain = window.location.hostname;
                         loginErrorEl.textContent = `錯誤：網域 ${currentDomain} 未被授權。`;
@@ -836,7 +807,7 @@
             }
             
             /**
-             * (修改) 初始化 Firebase 應用和認證 (使用 v9 模組化語法)
+             * 初始化 Firebase 應用和認證
              */
             async function initializeAppAndAuth() {
                 try {
@@ -848,37 +819,35 @@
 
                     // 簡化路徑
                     schoolDataDocRef = doc(db, 'public_data', 'school_data');
-                    // (*** 新增 ***) 討論區集合
                     forumPostsRef = collection(db, 'forum_posts');
 
-                    // (*** 修改 ***) 核心認證邏輯
+                    // 核心認證邏輯
                     onAuthStateChanged(auth, (user) => {
                         if (user) {
                             // 使用者已登入
                             userId = user.uid;
                             const userEmail = user.email || '';
                             
-                            // (*** 新增 ***) 儲存使用者資訊
+                            // 儲存使用者資訊
                             currentUserEmail = userEmail;
                             currentUserDisplayName = user.displayName || userEmail.split('@')[0];
                             
-                            // (*** 修改 ***) 這裡的檢查現在是備援 (signInWithGoogle 已先檢查過)
                             if (userEmail === 'fuwen@ppsh.ptc.edu.tw') {
                                 // 管理者
                                 console.log("管理者登入:", userId, userEmail);
                                 handleLogin('admin', userEmail);
                                 listenForSchoolData(); // 登入成功後開始監聽
-                                listenForForumPosts(); // (*** 新增 ***) 監聽討論區
+                                listenForForumPosts(); // 監聽討論區
                             } 
                             else if (userEmail.endsWith('@ppsh.ptc.edu.tw')) {
                                 // 一般使用者
                                 console.log("一般使用者登入:", userId, userEmail);
                                 handleLogin('user', userEmail);
                                 listenForSchoolData(); // 登入成功後開始監聽
-                                listenForForumPosts(); // (*** 新增 ***) 監聽討論區
+                                listenForForumPosts(); // 監聽討論區
                             } 
                             else {
-                                // 網域不符 (理論上不會執行到，但作為保險)
+                                // 網域不符
                                 console.warn("網域不符，強制登出:", userEmail);
                                 loginErrorEl.textContent = '錯誤：僅允許 @ppsh.ptc.edu.tw 網域登入。';
                                 signOut(auth); // 強制登出
@@ -901,7 +870,7 @@
             }
             
             /**
-             * 監聽公用資料庫中的資料 (使用 v9 模組化語法)
+             * 監聽公用資料庫中的資料
              */
             function listenForSchoolData() {
                 if (!schoolDataDocRef) {
@@ -925,8 +894,8 @@
                             allDataRows = JSON.parse(data.rows_json || '[]'); 
                             
                             populateAvailableColumns();
-                            processSchoolDataCache(); // (*** 新增 ***) 處理校系資料
-                            populateLinkedSchoolDropdowns(); // (*** 新增 ***) 填充討論區下拉選單
+                            processSchoolDataCache();
+                            populateLinkedSchoolDropdowns();
                             filterControlsEl.classList.remove('hidden');
                             clearAllFilters(true); // 顯示預覽
                             
@@ -943,8 +912,8 @@
                         console.log("資料庫中尚無資料");
                         allHeaders = [];
                         allDataRows = [];
-                        schoolDataCache = { linkedDeptList: [] }; // (*** 新增 ***) 清空快取
-                        populateLinkedSchoolDropdowns(); // (*** 新增 ***) 清空下拉選單
+                        schoolDataCache = { linkedDeptList: [] };
+                        populateLinkedSchoolDropdowns();
                         filterControlsEl.classList.add('hidden');
 
                         if (currentUserRole === 'admin') {
@@ -963,7 +932,7 @@
 
 
             /**
-             * 處理檔案上傳事件 (僅限管理者, 使用 v9 模組化語法)
+             * 處理檔案上傳事件 (僅限管理者)
              */
             async function handleFile(event) {
                 const file = event.target.files[0];
@@ -1001,13 +970,12 @@
 
                         const payload = {
                             headers: tempHeaders,
-                            rows_json: JSON.stringify(tempDataRows) // 將資料列儲存為 JSON 字串
+                            rows_json: JSON.stringify(tempDataRows) 
                         };
 
                         await setDoc(schoolDataDocRef, payload);
 
                         // 成功訊息。
-                        // 真正的資料載入將由 onSnapshot 監聽器自動觸發。
                         fileNameEl.textContent = '資料儲存成功！正在刷新...';
                         
                     } catch (error) {
@@ -1026,7 +994,7 @@
                 reader.readAsBinaryString(file);
             }
 
-            // --- (*** 新增 ***) 討論區功能函式 ---
+            // --- 討論區功能函式 ---
 
             /**
              * 格式化 Firebase Timestamp
@@ -1046,7 +1014,7 @@
             }
 
             /**
-             * (*** 重構 ***) 監聽討論區帖子列表 (簡化為單一查詢)
+             * 監聽討論區帖子列表
              */
             function listenForForumPosts() {
                 if (!forumPostsRef) return;
@@ -1054,15 +1022,14 @@
                 // 停止舊的監聽
                 if (unsubscribeForumPosts) unsubscribeForumPosts();
 
-                // (*** 修正 ***) 
-                // 簡化查詢：移除所有 'isPinned' 邏輯，只按發帖時間排序
+                // 按發帖時間排序
                 const q = query(
                     forumPostsRef, 
                     orderBy('createdAt', 'desc')
                 );
                 
                 unsubscribeForumPosts = onSnapshot(q, (snapshot) => {
-                    postsCache = snapshot.docs; // (*** 修改 ***)
+                    postsCache = snapshot.docs;
                     renderFilteredPostList(); // 重新渲染列表
                 }, (error) => {
                     console.error("監聽帖子失敗:", error);
@@ -1071,7 +1038,7 @@
             }
 
             /**
-             * (*** 新增 ***) 從 localStorage 載入篩選器
+             * 從 localStorage 載入篩選器
              */
             function loadFilters() {
                 try {
@@ -1081,7 +1048,6 @@
                         forumSearchKeywordEl.value = forumFilters.keyword || '';
                         forumSearchCategoryEl.value = forumFilters.category || '';
                         forumSearchStatusEl.value = forumFilters.status || '';
-                        // forumSearchFlagEl.value = forumFilters.flag || ''; // (*** 移除 ***)
                         forumSearchLinkedDeptEl.value = forumFilters.linkedDept || '';
                     }
                 } catch (e) {
@@ -1091,33 +1057,30 @@
             }
 
             /**
-             * (*** 新增 ***) 保存篩選器到 localStorage
+             * 保存篩選器到 localStorage
              */
             function saveFilters() {
                  forumFilters = {
                     keyword: forumSearchKeywordEl.value,
                     category: forumSearchCategoryEl.value,
                     status: forumSearchStatusEl.value,
-                    // flag: forumSearchFlagEl.value, // (*** 移除 ***)
                     linkedDept: forumSearchLinkedDeptEl.value,
                 };
                 localStorage.setItem('forumFilters', JSON.stringify(forumFilters));
             }
             
             /**
-             * (*** 新增 ***) 應用討論區篩選並渲染 (加入 Debounce)
+             * 應用討論區篩選並渲染 (加入 Debounce)
              */
-            // (*** 修正 ***) 建立 debounce 版本的函式
             const debouncedFilterHandler = debounce(() => {
                 if (!postListContainerEl) return;
                 
                 // 1. 更新並保存篩選器
                 saveFilters();
                 
-                // (*** 新增 ***) 偵錯日誌
                 console.log("正在套用討論區篩選:", forumFilters);
 
-                // 2. (*** 修改 ***) 取得快取
+                // 2. 取得快取
                 const allPosts = postsCache;
 
                 // 3. 執行客戶端篩選
@@ -1159,11 +1122,8 @@
                         }
                     }
 
-                    // (*** 移除 ***) 移除 'flag' (置頂/精選) 檢查
-
                     // 檢查關聯校系
                     if (forumFilters.linkedDept) {
-                        // (*** 修改 ***) 
                         const linkedText = `${post.linkedSchoolName || ''} - ${post.linkedDepartmentName || ''}`;
                         if (forumFilters.linkedDept !== linkedText) {
                             return false;
@@ -1173,21 +1133,19 @@
                     return true;
                 });
                 
-                // (*** 新增 ***) 偵錯日誌
                 console.log(`篩選出 ${filteredDocs.length} / ${allPosts.length} 篇帖子`);
 
                 // 4. 渲染結果
                 renderPostList(filteredDocs);
             }, 300); // 延遲 300 毫秒
 
-            // (*** 修改 ***) 建立一個 wrapper 函式
             function renderFilteredPostList() {
                 debouncedFilterHandler();
             }
 
 
             /**
-             * (*** 修改 ***) 渲染帖子列表 (僅負責 HTML)
+             * 渲染帖子列表 (僅負責 HTML)
              */
             function renderPostList(docs) {
                 if (!postListContainerEl) return;
@@ -1200,21 +1158,20 @@
                 docs.forEach(doc => {
                     const post = doc.data();
                     const postEl = document.createElement('div');
-                    // (*** 移除 ***) 移除 'pinned' 樣式
                     postEl.className = `post-item`;
                     
-                    // (*** 修改 ***) 建立標籤 (移除 置頂/精選)
+                    // 建立標籤
                     let tagsHTML = '';
                     if (post.category) {
                         tagsHTML += `<span class="post-tag tag-category">${post.category}</span>`;
                     }
                     if (post.linkedSchoolName) {
-                        // (*** 修改 ***) 顯示完整校系
+                        // 顯示完整校系
                         const linkedText = `${post.linkedSchoolName} - ${post.linkedDepartmentName}`;
                         tagsHTML += `<span class="post-tag tag-linked">${linkedText}</span>`;
                     }
 
-                    // (*** 修改 ***) 更新列表項的 HTML
+                    // 更新列表項的 HTML
                     postEl.innerHTML = `
                         <div class="mb-2 flex flex-wrap">
                             ${tagsHTML}
@@ -1238,14 +1195,14 @@
             }
             
             /**
-             * (*** 新增 ***) 處理：顯示帖子詳情
+             * 處理：顯示帖子詳情
              */
             function handleShowPostDetail(postId) {
                 showView('detail', postId);
             }
 
             /**
-             * (*** 修改 ***) 載入單一帖子及其回覆
+             * 載入單一帖子及其回覆
              */
             async function loadPostDetail(postId) {
                 // 1. 載入帖子主內容
@@ -1257,7 +1214,7 @@
                     if (docSnap.exists()) {
                         const post = docSnap.data();
                         
-                        // (*** 修改 ***) 管理員按鈕 (移除置頂/精選)
+                        // 管理員按鈕
                         let adminBtnsHTML = '';
                         if (currentUserRole === 'admin') {
                             adminBtnsHTML = `
@@ -1267,11 +1224,11 @@
                             `;
                         }
                         
-                        // (*** 修改 ***) 標籤 (移除置頂/精選)
+                        // 標籤
                         let tagsHTML = '';
                         if (post.category) tagsHTML += `<span class="post-tag tag-category">${post.category}</span>`;
 
-                        // (*** 新增 ***) 關聯資料
+                        // 關聯資料
                         let linkedDataHTML = '';
                         if (post.linkedSchoolName) {
                             linkedDataHTML = `
@@ -1286,7 +1243,7 @@
                             `;
                         }
 
-                        // (*** 修改 ***) 更新詳情 HTML
+                        // 更新詳情 HTML
                         postDetailContentEl.innerHTML = `
                             <div class="flex justify-between items-start mb-2">
                                 <div class="flex flex-wrap">
@@ -1304,7 +1261,7 @@
                             </div>
                         `;
                         
-                        // (*** 新增 ***) 綁定管理員按鈕事件
+                        // 綁定管理員按鈕事件
                         if (currentUserRole === 'admin') {
                             document.getElementById('delete-post-btn').addEventListener('click', () => handleDeletePost(postId));
                         }
@@ -1326,8 +1283,7 @@
 
                 const repliesRef = collection(db, 'forum_posts', postId, 'replies');
                 
-                // (*** 修正 ***) 
-                // 移除 'isFeaturedReply' 排序，只按時間排序
+                // 按時間排序
                 const q = query(repliesRef, orderBy('createdAt', 'asc'));
                 
                 unsubscribeReplies = onSnapshot(q, (snapshot) => {
@@ -1339,7 +1295,7 @@
             }
             
             /**
-             * (*** 修改 ***) 渲染回覆列表
+             * 渲染回覆列表
              */
             function renderReplies(docs, postId) {
                 if (!repliesListContainerEl) return;
@@ -1353,10 +1309,9 @@
                     const reply = doc.data();
                     const replyId = doc.id;
                     const replyEl = document.createElement('div');
-                    // (*** 移除 ***) 移除精選樣式
                     replyEl.className = `reply-item`;
                     
-                    // (*** 修改 ***) 管理員按鈕 (移除精選)
+                    // 管理員按鈕
                     let adminBtnHTML = '';
                     if (currentUserRole === 'admin') {
                         adminBtnHTML = `
@@ -1364,9 +1319,7 @@
                         `;
                     }
                     
-                    // (*** 移除 ***) 移除精選徽章
-
-                    // (*** 修改 ***) 更新回覆 HTML
+                    // 更新回覆 HTML
                     replyEl.innerHTML = `
                         <div class="flex justify-between items-center mb-2">
                             <p class="post-meta">
@@ -1382,7 +1335,7 @@
                     repliesListContainerEl.appendChild(replyEl);
                 });
                 
-                // (*** 修改 ***) 綁定所有刪除回覆按鈕
+                // 綁定所有刪除回覆按鈕
                 repliesListContainerEl.querySelectorAll('.delete-reply-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         handleDeleteReply(e.currentTarget.dataset.postid, e.currentTarget.dataset.replyid);
@@ -1391,7 +1344,7 @@
             }
 
             /**
-             * (*** 修改 ***) 處理：發表新帖子 (移除 isPinned/isFeatured)
+             * 處理：發表新帖子
              */
             async function handleCreatePost(event) {
                 event.preventDefault();
@@ -1406,7 +1359,7 @@
                     return;
                 }
                 
-                // (*** 修改 ***) 獲取關聯資料 (來自單一下拉選單)
+                // 獲取關聯資料
                 const linkedDeptValue = postLinkDeptEl.value;
                 let linkedData = {};
                 if (linkedDeptValue) {
@@ -1430,13 +1383,12 @@
                 submitPostBtn.querySelector('span:not(.hidden)').textContent = '發佈中...';
 
                 try {
-                    // (*** 修改 ***) 移除置頂/精選相關欄位
                     await addDoc(forumPostsRef, {
                         title: title,
                         content: content,
                         category: category,
                         ...linkedData, 
-                        replyCount: 0,   // (*** 保留 ***)
+                        replyCount: 0,
                         createdAt: serverTimestamp(),
                         authorEmail: currentUserEmail,
                         authorDisplayName: currentUserDisplayName,
@@ -1453,7 +1405,7 @@
             }
             
             /**
-             * (*** 修改 ***) 處理：發表新回覆 (並更新父帖子)
+             * 處理：發表新回覆 (並更新父帖子)
              */
             async function handleCreateReply(event) {
                 event.preventDefault();
@@ -1468,7 +1420,6 @@
                 try {
                     // 1. 新增回覆
                     const repliesRef = collection(db, 'forum_posts', currentPostId, 'replies');
-                    // (*** 修改 ***) 移除 isFeaturedReply
                     await addDoc(repliesRef, {
                         content: content,
                         createdAt: serverTimestamp(),
@@ -1477,7 +1428,7 @@
                         authorUid: userId
                     });
                     
-                    // 2. (*** 新增 ***) 更新父帖子的回覆數
+                    // 2. 更新父帖子的回覆數
                     const postRef = doc(db, 'forum_posts', currentPostId);
                     await updateDoc(postRef, {
                         replyCount: increment(1)
@@ -1493,15 +1444,12 @@
                 }
             }
             
-            // (*** 移除 ***) handleTogglePostFlag 函式已移除
-            // (*** 移除 ***) handleToggleReplyFlag 函式已移除
 
             /**
-             * (*** 新增 ***) 處理：刪除帖子 (僅限管理員)
+             * 處理：刪除帖子 (僅限管理員)
              */
             async function handleDeletePost(postId) {
                 if (currentUserRole !== 'admin') return;
-                // (*** 警告：此操作目前不會刪除子集合的回覆 ***)
                 if (!confirm('您確定要刪除這整篇帖子嗎？\n（注意：這目前不會自動刪除底下的回覆）')) return;
                 
                 try {
@@ -1514,7 +1462,7 @@
             }
             
             /**
-             * (*** 新增 ***) 處理：刪除回覆 (僅限管理員)
+             * 處理：刪除回覆 (僅限管理員)
              */
             async function handleDeleteReply(postId, replyId) {
                 if (currentUserRole !== 'admin') return;
@@ -1524,7 +1472,7 @@
                     // 1. 刪除回覆
                     await deleteDoc(doc(db, 'forum_posts', postId, 'replies', replyId));
                     
-                    // 2. (*** 新增 ***) 更新父帖子的回覆數 (-1)
+                    // 2. 更新父帖子的回覆數 (-1)
                     const postRef = doc(db, 'forum_posts', postId);
                     await updateDoc(postRef, {
                         replyCount: increment(-1)
@@ -1536,20 +1484,44 @@
                 }
             }
             
-            // --- (*** 修改 ***) 篩選器和 UI 邏輯 ---
+            // --- 篩選器和 UI 邏輯 ---
 
             /**
-             * 建立可用的欄位列表
+             * (修改) 建立可用的欄位列表，並依照指定順序排列
              */
             function populateAvailableColumns() {
-                availableColumns = allHeaders.map((header, index) => ({
-                    name: header || `(第 ${index + 1} 欄)`,
+                // 定義您要求的優先排序清單
+                const priorityOrder = [
+                    "校系代碼", "學校", "校系名稱",
+                    "114原住民外加名額", "114預計通過一階人數", "114通過一階外加", "114正取人數", "114備取人數", "114分發結果", "114分發最低標準",
+                    "113原住民外加名額", "113預計通過一階人數", "113通過一階外加", "113正取人數", "113備取人數", "113分發結果", "113分發最低標準",
+                    "112原住民外加名額", "112預計通過一階人數", "112通過一階外加", "112正取人數", "112備取人數", "112分發結果", "112分發最低標準"
+                ];
+
+                // 先將原始欄位轉為物件
+                let cols = allHeaders.map((header, index) => ({
+                    name: (header || "").trim() || `(第 ${index + 1} 欄)`,
                     index: index
                 }));
+
+                // 根據優先清單進行排序
+                availableColumns = cols.sort((a, b) => {
+                    let indexA = priorityOrder.indexOf(a.name);
+                    let indexB = priorityOrder.indexOf(b.name);
+
+                    // 如果欄位不在優先清單中，排在最後面
+                    if (indexA === -1) indexA = 999;
+                    if (indexB === -1) indexB = 999;
+
+                    if (indexA !== indexB) {
+                        return indexA - indexB;
+                    }
+                    return a.index - b.index; // 若都不在清單中，按原始索引排
+                });
             }
 
             /**
-             * (*** 修改 ***) 處理校系資料快取 (去除空白和重複)
+             * 處理校系資料快取 (去除空白和重複)
              */
             function processSchoolDataCache() {
                 // 找到欄位索引
@@ -1584,13 +1556,13 @@
                     }
                 });
                 
-                // (*** 新增 ***) 排序
+                // 排序
                 schoolDataCache.linkedDeptList.sort((a, b) => a.text.localeCompare(b.text, 'zh-Hant'));
                 console.log("校系資料快取處理完畢，共", schoolDataCache.linkedDeptList.length, "筆資料");
             }
 
             /**
-             * (*** 修改 ***) 填充發帖表單和篩選器的下拉選單
+             * 填充發帖表單和篩選器的下拉選單
              */
             function populateLinkedSchoolDropdowns() {
                 // 清空
@@ -1613,12 +1585,12 @@
                 postLinkDeptEl.innerHTML += optionsHTML;
                 forumSearchLinkedDeptEl.innerHTML += optionsHTML;
                 
-                // (*** 新增 ***) 載入 localStorage 中儲存的篩選值
+                // 載入 localStorage 中儲存的篩選值
                 loadFilters();
             }
 
             /**
-             * (*** 修改 ***) 綁定關聯校系下拉選單的 change 事件
+             * 綁定關聯校系下拉選單的 change 事件
              */
             if (postLinkDeptEl) {
                 postLinkDeptEl.addEventListener('change', () => {
@@ -1687,7 +1659,7 @@
             }
             
             /**
-             * (新增) 更新所有條件組的標題和移除按鈕
+             * 更新所有條件組的標題和移除按鈕
              */
             function updateFilterGroupHeaders() {
                 const allGroups = filterGroupsContainerEl.querySelectorAll('.filter-group');
@@ -1746,18 +1718,18 @@
 
 
             /**
-             * (修改) 新增一個條件組
+             * 新增一個條件組
              */
             function addFilterGroup(logic = 'AND') {
                 const groupWrapper = document.createElement('div');
                 groupWrapper.className = 'filter-group bg-white p-4 rounded-xl shadow-md';
                 
-                // --- (修改) 標頭(Header)將由 updateFilterGroupHeaders 函式處理 ---
+                // 標頭(Header)將由 updateFilterGroupHeaders 函式處理
                 const headerContainer = document.createElement('div');
                 headerContainer.className = 'filter-group-header';
                 groupWrapper.appendChild(headerContainer); // 先加一個空的
 
-                // --- HTML 結構 (移除標頭) ---
+                // HTML 結構
                 const groupHTML = `
                     <!-- 第一行：欄位、運算子、比較對象、移除 -->
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -1792,7 +1764,7 @@
                                 <option value="column">欄位</option>
                             </select>
                         </div>
-                        <!-- 移除按鈕 (移除 isFirst 判斷) -->
+                        <!-- 移除按鈕 -->
                         <div class="md:col-span-1 flex items-end">
                             <button class="remove-filter-btn text-gray-400 hover:text-red-500 transition duration-300 p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1824,7 +1796,7 @@
                     </div>
                 `;
                 
-                // (修改) 建立一個容器來放 form
+                // 建立一個容器來放 form
                 const formContainer = document.createElement('div');
                 formContainer.innerHTML = groupHTML;
                 groupWrapper.appendChild(formContainer);
@@ -1852,15 +1824,15 @@
                     updateTargetTypeInputs(e.currentTarget);
                 });
 
-                // (修改) 觸發一次，確保初始 UI 正確
+                // 觸發一次，確保初始 UI 正確
                 updateOperatorInputs(operatorSelect);
                 
-                // (修改) 最後，更新所有標頭
+                // 最後，更新所有標頭
                 updateFilterGroupHeaders();
             }
 
             /**
-             * (修改) 移除一個條件組
+             * 移除一個條件組
              */
             function removeFilterGroup(removeButton) {
                 const groupWrapper = removeButton.closest('.filter-group');
@@ -1868,13 +1840,13 @@
                 groupWrapper.classList.add('filter-group-exit');
                 groupWrapper.addEventListener('transitionend', () => {
                     groupWrapper.remove();
-                    // (修改) 移除後，更新所有標頭
+                    // 移除後，更新所有標頭
                     updateFilterGroupHeaders();
                 }, { once: true });
             }
 
             /**
-             * (更新) 根據運算子更新 UI
+             * 根據運算子更新 UI
              */
             function updateOperatorInputs(operatorSelect) {
                 const groupWrapper = operatorSelect.closest('.filter-group');
@@ -1885,7 +1857,7 @@
                 const op = operatorSelect.value;
 
                 if (op === 'contains' || op === 'not_contains' || op === 'between') {
-                    // 包含/介於：強制固定值, 禁用 "比較對象" 下拉選單
+                    // 包含/介於：強制固定值, 停用 "比較對象" 下拉選單
                     targetTypeSelect.disabled = true;
                     targetTypeSelect.value = 'value'; // 強制設為 value
                 } else {
@@ -1905,7 +1877,7 @@
             }
 
             /**
-             * (更新) 根據比較對象更新 UI
+             * 根據比較對象更新 UI
              */
             function updateTargetTypeInputs(targetTypeSelect) {
                 const groupWrapper = targetTypeSelect.closest('.filter-group');
@@ -1931,11 +1903,11 @@
             }
             
             /**
-             * (修改) 清除所有條件組
+             * 清除所有條件組
              */
             function clearAllFilters(showPreview = true) {
                 filterGroupsContainerEl.innerHTML = '';
-                // (*** 修改 ***) 只有在有欄位可選時才新增
+                // 只有在有欄位可選時才新增
                 if(availableColumns.length > 0) {
                      addFilterGroup(); // 新增第一個預設群組
                 }
@@ -1956,7 +1928,7 @@
             }
 
             /**
-             * (重寫) 檢查單一條件是否滿足
+             * 檢查單一條件是否滿足
              */
             function checkCondition(row, filter) {
                 const { colIndex, operator, targetType, val1, val2, valueColIndex } = filter;
@@ -1967,7 +1939,7 @@
                 const leftVal = (row[colIndex] === null || row[colIndex] === undefined) ? '' : row[colIndex];
 
                 try {
-                    // --- 情況 1：比較對象是「固定值」---
+                    // --- 情況 1：比較對像是「固定值」---
                     if (targetType === 'value') {
                         if (val1 === "") return true; // 未輸入值
 
@@ -1990,7 +1962,6 @@
                             case 'gt':
                                 return isNumeric ? leftValNum > val1Num : leftValStr > val1Str;
                             case 'lt':
-                                // (*** 偵錯修正 ***) valExamples -> val1Str (已修正)
                                 return isNumeric ? leftValNum < val1Num : leftValStr < val1Str;
                             case 'gte':
                                 return isNumeric ? leftValNum >= val1Num : leftValStr >= val1Str;
@@ -2008,7 +1979,7 @@
                                 return true;
                         }
                     }
-                    // --- 情況 2：比較對象是「欄位」---
+                    // --- 情況 2：比較對像是「欄位」---
                     else if (targetType === 'column') {
                         if (valueColIndex === "") return true; // 未選擇右側欄位
 
@@ -2047,7 +2018,7 @@
 
 
             /**
-             * (重寫) 套用篩選器
+             * 套用篩選器
              */
             function applyFilter() {
                 // 1. 從 DOM 讀取並建立篩選器狀態
@@ -2063,7 +2034,6 @@
                     const valColEl = group.querySelector('.filter-value-column');
                     const logicEl = group.querySelector('.filter-logic');
                     
-                    // (*** 新增 ***) 檢查 colEl 是否存在
                     if (!colEl) return; 
 
                     const targetType = targetTypeEl.value;
@@ -2071,7 +2041,7 @@
                     
 
                     if (targetType === 'value') {
-                        // (修正) 也要檢查 '介於' 的 val2
+                        // 也要檢查 '介於' 的 val2
                         if (opEl.value === 'between') {
                             isValid = colEl.value && val1El.value && val2El.value;
                         } else {
@@ -2110,7 +2080,6 @@
                         const colEl = g.querySelector('.filter-column');
                         const val1El = g.querySelector('.filter-value-1');
                         const valColEl = g.querySelector('.filter-value-column');
-                        // (*** 新增 ***) 檢查元素是否存在
                         return (colEl && colEl.value) || (val1El && val1El.value) || (valColEl && valColEl.value);
                     });
                     
@@ -2162,13 +2131,18 @@
                     return;
                 }
 
-                // (*** 新增 ***) 如果沒有 headers，不執行
-                if(allHeaders.length === 0) {
-                    // 這是 handleLogout 或 初始狀態，不需要顯示錯誤
-                    return;
-                }
+                if(allHeaders.length === 0) return;
 
-                const colNames = ["學校", "校系名稱", "112分發結果", "113分發結果"];
+                // (修改) 指定要顯示的 6 個欄位
+                const colNames = [
+                    "學校", 
+                    "校系名稱", 
+                    "114原住民外加名額", 
+                    "114正取人數", 
+                    "113原住民外加名額", 
+                    "113正取人數"
+                ];
+                
                 const colIndices = [];
                 const missingCols = [];
                 
@@ -2190,11 +2164,9 @@
                 }
 
                 if (rows.length === 0) {
-                    // (修改) 區分'找不到'和'未篩選'
                     if(activeFilters.length > 0) {
                         resultsOutputEl.textContent = '找不到符合篩選條件的資料。';
                     } else {
-                        // 如果沒有 activeFilters (例如剛清除)，但 rows 是 0 (例如檔案為空)
                         resultsOutputEl.textContent = '資料為空或找不到符合條件的資料。';
                     }
                     return;
@@ -2202,9 +2174,8 @@
 
                 // --- 準備匯出資料 (使用所有欄位) ---
                 currentExportData = [allHeaders, ...rows];
-                // --- 匯出資料準備完畢 ---
 
-                // 建立 HTML 表格 (只顯示 4 欄)
+                // 建立 HTML 表格
                 let html = '<table class="w-full text-left border-collapse">';
                 html += '<thead><tr>';
                 colNames.forEach(header => {
@@ -2228,7 +2199,7 @@
             }
 
             /**
-             * (更新) 更新篩選條件標籤 (Chips)
+             * 更新篩選條件標籤 (Chips)
              */
             function updateFilterChips() {
                 filterChipsContainerEl.innerHTML = '';
@@ -2258,7 +2229,6 @@
                         filterChipsContainerEl.appendChild(logicChip);
                     }
                     
-                    // (修改) 改為亮藍色
                     const chip = document.createElement('div');
                     chip.className = "bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded-full flex items-center gap-2";
                     chip.innerHTML = `
@@ -2277,7 +2247,7 @@
             }
 
             /**
-             * (新增) 根據 ID 移除一個篩選條件 (從 Chip 觸發)
+             * 根據 ID 移除一個篩選條件 (從 Chip 觸發)
              */
             function removeFilterChip(filterId) {
                 // 從 DOM 中找到對應的 group 並移除
@@ -2286,7 +2256,6 @@
 
                 const groupElements = filterGroupsContainerEl.querySelectorAll('.filter-group');
                 if (groupElements[filterIndex]) {
-                    // (修改) 直接觸發移除按鈕點擊，讓 removeFilterGroup 統一處理
                     const removeBtn = groupElements[filterIndex].querySelector('.remove-filter-btn');
                     if (removeBtn) {
                         removeFilterGroup(removeBtn);
@@ -2340,7 +2309,7 @@
                 }
             }
 
-            // --- (修改) 綁定事件 ---
+            // 綁定事件
             
             // 檔案上傳
             if(fileInputEl) fileInputEl.addEventListener('change', handleFile);
@@ -2351,7 +2320,7 @@
             if(addFilterBtnEl) addFilterBtnEl.addEventListener('click', () => addFilterGroup());
             if(clearFiltersBtnEl) clearFiltersBtnEl.addEventListener('click', () => clearAllFilters(true));
 
-            // (*** 新增 ***) 討論區 UI 綁定
+            // 討論區 UI 綁定
             if(showNewPostFormBtn) showNewPostFormBtn.addEventListener('click', () => showView('new-post'));
             if(cancelPostBtn) cancelPostBtn.addEventListener('click', () => showView('main'));
             if(backToMainBtn1) backToMainBtn1.addEventListener('click', () => showView('main'));
@@ -2359,8 +2328,7 @@
             if(newPostFormEl) newPostFormEl.addEventListener('submit', handleCreatePost);
             if(newReplyFormEl) newReplyFormEl.addEventListener('submit', handleCreateReply);
 
-            // (*** 修改 ***) 討論區篩選器事件 (移除按鈕綁定)
-            // (*** 修改 ***) 綁定 debounce 版本的函式
+            // 討論區篩選器事件 (綁定 debounce 版本的函式)
             forumFilterInputs.forEach(input => {
                 if (input) {
                     input.addEventListener('input', renderFilteredPostList);
@@ -2368,7 +2336,6 @@
                 }
             });
 
-            // (*** 新增 ***) 
             if (googleLoginBtn) {
                 googleLoginBtn.addEventListener('click', signInWithGoogle);
             }
@@ -2381,7 +2348,7 @@
             }
 
 
-            // (*** 新增 ***) 啟動 Firebase 初始化
+            // 啟動 Firebase 初始化
             initializeAppAndAuth();
         
         }); // 結束 DOMContentLoaded
@@ -2389,4 +2356,3 @@
 
 </body>
 </html>
-
