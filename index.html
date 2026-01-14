@@ -313,6 +313,64 @@
                 </div>
             </section>
 
+            <!-- 📘 新增：篩選策略教學指南 -->
+            <section class="mb-6 bg-white rounded-2xl shadow-md border-l-4 border-yellow-400 overflow-hidden">
+                <details class="group" open> <!-- open 屬性讓它預設展開，若想預設收合請移除 open -->
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-5 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                        <span class="flex items-center text-lg text-yellow-800 font-bold">
+                            💡 篩選策略教學指南 (點擊收合/展開)
+                        </span>
+                        <span class="transition group-open:rotate-180">
+                            <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                        </span>
+                    </summary>
+                    <div class="text-gray-700 p-5 pt-2 text-sm md:text-base space-y-4">
+                        
+                        <!-- 免責聲明 -->
+                        <div class="p-3 bg-red-50 text-red-700 rounded-lg border border-red-100 flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                            <p class="font-bold">注意：以下針對「大學個人申請-原住民外加」提供篩選策略建議，不保證一定上榜，僅供選填志願參考。</p>
+                        </div>
+
+                        <!-- 核心概念 -->
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800 mb-2">🎯 核心概念</h4>
+                            <p class="text-blue-900 leading-relaxed">
+                                一般生通過第 1 階段的人數幾乎是滿額，但原民生比較特殊，很多科系是<strong>不滿額</strong>（這不代表科系不好），因此比較容易有第二階段面試機會。我們可利用此特性尋找機會。
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- 策略 1 -->
+                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                                <h4 class="font-bold text-gray-800 text-lg mb-2 border-b pb-2">策略 1：國立學校，冷門科系</h4>
+                                <p class="mb-3 text-gray-600">目標：找到近 3 年內，國立大學中，原住民比較少報名的科系。</p>
+                                <div class="bg-gray-50 p-3 rounded-lg space-y-2 text-sm font-mono">
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件1</span> 學校 <span class="text-pink-500 font-bold mx-1">包含</span> "國立"</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件4</span> 112預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 112通過一階外加</div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-500">* 若條件太嚴格，可刪除條件4 (看近2年即可)。</p>
+                            </div>
+
+                            <!-- 策略 2 -->
+                            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                                <h4 class="font-bold text-gray-800 text-lg mb-2 border-b pb-2">策略 2：特定科系，冷門學校</h4>
+                                <p class="mb-3 text-gray-600">目標：找到特定科系(如社工)，近 3 年內比較少人報名的學校。</p>
+                                <div class="bg-gray-50 p-3 rounded-lg space-y-2 text-sm font-mono">
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件1</span> 校系名稱 <span class="text-pink-500 font-bold mx-1">包含</span> "社會工作"</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-500">* 可自行將「社會工作」替換為其他感興趣的關鍵字。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+            </section>
+
             <!-- 篩選器區域 (改為漸層卡片) -->
             <section id="filter-controls" class="mb-6 hidden bg-gradient-to-br from-blue-50 to-green-50 p-6 rounded-2xl shadow-lg">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">🔍 篩選資料</h2>
@@ -2394,26 +2452,60 @@
 
 
             /**
-             * 匯出結果 (XLSX)
+             * (更新) 匯出結果 (XLSX) - 依照特定順序
              */
             function exportResults() {
-                if (!currentExportData || currentExportData.length === 0) {
+                if (!currentExportData || currentExportData.length <= 1) {
                     console.warn("沒有資料可匯出。");
                     return;
                 }
-                const ws = XLSX.utils.aoa_to_sheet(currentExportData);
+
+                // 1. 定義希望輸出的欄位順序
+                const targetHeaders = [
+                    "校系代碼", "學校", "校系名稱",
+                    "114原住民外加名額", "114預計通過一階人數", "114通過一階外加", "114正取人數", "114備取人數", "114分發結果", "114分發最低標準",
+                    "113原住民外加名額", "113預計通過一階人數", "113通過一階外加", "113正取人數", "113備取人數", "113分發結果", "113分發最低標準",
+                    "112原住民外加名額", "112預計通過一階人數", "112通過一階外加", "112正取人數", "112備取人數", "112分發結果", "112分發最低標準"
+                ];
+
+                // 2. 找出每個目標欄位在原始資料 (allHeaders) 中的索引
+                const colIndices = targetHeaders.map(target => {
+                    return allHeaders.findIndex(h => h && h.trim() === target);
+                });
+
+                // 3. 重組資料
+                // currentExportData[0] 是標題列 (不使用)，[1]... 是資料列
+                const sourceRows = currentExportData.slice(1);
+                
+                const finalExportData = [];
+                
+                // 加入新的標題列
+                finalExportData.push(targetHeaders);
+
+                // 處理每一列資料
+                sourceRows.forEach(row => {
+                    const newRow = colIndices.map(index => {
+                        // 如果在原始資料中找不到該欄位 (-1)，填入空字串
+                        if (index === -1) return "";
+                        return (row[index] === null || row[index] === undefined) ? "" : row[index];
+                    });
+                    finalExportData.push(newRow);
+                });
+                
+                const ws = XLSX.utils.aoa_to_sheet(finalExportData);
                 
                 // (選用) 設置欄寬
                 try {
-                    const colsToProcess = Math.min(currentExportData[0].length, 20);
+                    const colsToProcess = Math.min(finalExportData[0].length, 30);
                     const colWidths = [];
                     for(let i = 0; i < colsToProcess; i++) {
-                        let maxLen = (currentExportData[0][i] || '').length;
-                        for (let j = 1; j < Math.min(currentExportData.length, 101); j++) {
-                            const len = (currentExportData[j][i] || '').toString().length;
+                        let maxLen = (finalExportData[0][i] || '').length;
+                        // 取前 100 筆資料來估算寬度，避免效能問題
+                        for (let j = 1; j < Math.min(finalExportData.length, 101); j++) {
+                            const len = (finalExportData[j][i] || '').toString().length;
                             if (len > maxLen) maxLen = len;
                         }
-                        const chineseChars = (currentExportData[0][i].match(/[\u4e00-\u9fa5]/g) || []).length;
+                        const chineseChars = (finalExportData[0][i].match(/[\u4e00-\u9fa5]/g) || []).length;
                         let adjustedMaxLen = maxLen + chineseChars;
                         adjustedMaxLen = Math.max(adjustedMaxLen, 10);
                         adjustedMaxLen = Math.min(adjustedMaxLen, 50);
@@ -2484,3 +2576,4 @@
 
 </body>
 </html>
+```
