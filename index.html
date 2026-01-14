@@ -1,20 +1,3 @@
-
-Model
-ThinkingThoughts
-Expand to view model thoughts
-
-chevron_right
-這份完整程式碼已經包含您所有的需求：
-
-1.  **匯出功能更新**：修改了 `exportResults` 函式，現在點擊「匯出 (XLSX)」時，Excel 檔案的欄位會嚴格依照您指定的順序排列（校系代碼、學校、校系名稱、114年區塊、113年區塊、112年區塊）。如果原始資料缺少某個欄位，匯出時該欄位會留空。
-2.  **保留之前的設定**：
-    *   篩選器的下拉選單順序已優化。
-    *   網頁上的「篩選結果」表格僅顯示指定的 6 個關鍵欄位。
-    *   管理員的留言板開關功能已保留。
-
-您可以直接儲存此檔案為 `index.html`。
-
-```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -2411,60 +2394,26 @@ chevron_right
 
 
             /**
-             * (更新) 匯出結果 (XLSX) - 依照特定順序
+             * 匯出結果 (XLSX)
              */
             function exportResults() {
-                if (!currentExportData || currentExportData.length <= 1) {
+                if (!currentExportData || currentExportData.length === 0) {
                     console.warn("沒有資料可匯出。");
                     return;
                 }
-
-                // 1. 定義希望輸出的欄位順序
-                const targetHeaders = [
-                    "校系代碼", "學校", "校系名稱",
-                    "114原住民外加名額", "114預計通過一階人數", "114通過一階外加", "114正取人數", "114備取人數", "114分發結果", "114分發最低標準",
-                    "113原住民外加名額", "113預計通過一階人數", "113通過一階外加", "113正取人數", "113備取人數", "113分發結果", "113分發最低標準",
-                    "112原住民外加名額", "112預計通過一階人數", "112通過一階外加", "112正取人數", "112備取人數", "112分發結果", "112分發最低標準"
-                ];
-
-                // 2. 找出每個目標欄位在原始資料 (allHeaders) 中的索引
-                const colIndices = targetHeaders.map(target => {
-                    return allHeaders.findIndex(h => h && h.trim() === target);
-                });
-
-                // 3. 重組資料
-                // currentExportData[0] 是標題列 (不使用)，[1]... 是資料列
-                const sourceRows = currentExportData.slice(1);
-                
-                const finalExportData = [];
-                
-                // 加入新的標題列
-                finalExportData.push(targetHeaders);
-
-                // 處理每一列資料
-                sourceRows.forEach(row => {
-                    const newRow = colIndices.map(index => {
-                        // 如果在原始資料中找不到該欄位 (-1)，填入空字串
-                        if (index === -1) return "";
-                        return (row[index] === null || row[index] === undefined) ? "" : row[index];
-                    });
-                    finalExportData.push(newRow);
-                });
-                
-                const ws = XLSX.utils.aoa_to_sheet(finalExportData);
+                const ws = XLSX.utils.aoa_to_sheet(currentExportData);
                 
                 // (選用) 設置欄寬
                 try {
-                    const colsToProcess = Math.min(finalExportData[0].length, 30);
+                    const colsToProcess = Math.min(currentExportData[0].length, 20);
                     const colWidths = [];
                     for(let i = 0; i < colsToProcess; i++) {
-                        let maxLen = (finalExportData[0][i] || '').length;
-                        // 取前 100 筆資料來估算寬度，避免效能問題
-                        for (let j = 1; j < Math.min(finalExportData.length, 101); j++) {
-                            const len = (finalExportData[j][i] || '').toString().length;
+                        let maxLen = (currentExportData[0][i] || '').length;
+                        for (let j = 1; j < Math.min(currentExportData.length, 101); j++) {
+                            const len = (currentExportData[j][i] || '').toString().length;
                             if (len > maxLen) maxLen = len;
                         }
-                        const chineseChars = (finalExportData[0][i].match(/[\u4e00-\u9fa5]/g) || []).length;
+                        const chineseChars = (currentExportData[0][i].match(/[\u4e00-\u9fa5]/g) || []).length;
                         let adjustedMaxLen = maxLen + chineseChars;
                         adjustedMaxLen = Math.max(adjustedMaxLen, 10);
                         adjustedMaxLen = Math.min(adjustedMaxLen, 50);
