@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -347,9 +348,9 @@
                                 <p class="mb-3 text-gray-600">目標：找到近 3 年內，國立大學中，原住民比較少報名的科系。</p>
                                 <div class="bg-gray-50 p-3 rounded-lg space-y-2 text-sm font-mono">
                                     <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件1</span> 學校 <span class="text-pink-500 font-bold mx-1">包含</span> "國立"</div>
-                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計通過一階人數 <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
-                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計通過一階人數 <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
-                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件4</span> 112預計通過一階人數 <span class="text-blue-500 font-bold mx-1">&gt;</span> 112通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件4</span> 112預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 112通過一階外加</div>
                                 </div>
                                 <p class="mt-2 text-xs text-gray-500">* 若條件太嚴格，可刪除條件4 (看近2年即可)。</p>
                             </div>
@@ -357,11 +358,11 @@
                             <!-- 策略 2 -->
                             <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
                                 <h4 class="font-bold text-gray-800 text-lg mb-2 border-b pb-2">策略 2：特定科系，冷門學校</h4>
-                                <p class="mb-3 text-gray-600">目標：找到特定科系(如社工)，近 2 年內比較少人報名的學校。</p>
+                                <p class="mb-3 text-gray-600">目標：找到特定科系(如社工)，近 3 年內比較少人報名的學校。</p>
                                 <div class="bg-gray-50 p-3 rounded-lg space-y-2 text-sm font-mono">
                                     <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件1</span> 校系名稱 <span class="text-pink-500 font-bold mx-1">包含</span> "社會工作"</div>
-                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計通過一階人數 <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
-                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計通過一階人數 <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件2</span> 114預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 114通過一階外加</div>
+                                    <div class="flex items-center"><span class="bg-gray-200 px-2 py-0.5 rounded text-xs mr-2">條件3</span> 113預計... <span class="text-blue-500 font-bold mx-1">&gt;</span> 113通過一階外加</div>
                                 </div>
                                 <p class="mt-2 text-xs text-gray-500">* 可自行將「社會工作」替換為其他感興趣的關鍵字。</p>
                             </div>
@@ -1804,7 +1805,7 @@
 
 
             /**
-             * 顯示前 12 筆資料 (第 2-9 欄) 作為預覽
+             * (Modified) 顯示前 12 筆資料 - 使用特定欄位
              */
             function displayInitialPreview() {
                 resultsOutputEl.innerHTML = '';
@@ -1815,26 +1816,46 @@
                     resultsOutputEl.textContent = '沒有資料可供預覽。';
                     return;
                 }
-                if (allHeaders.length < 9) {
-                    resultsOutputEl.textContent = `錯誤：檔案欄位不足 9 欄，無法顯示預覽。`;
-                    return;
-                }
 
-                const previewHeaders = allHeaders.slice(1, 9);
+                // (Modified) Specify columns for initial preview
+                const colNames = [
+                    "學校", 
+                    "校系名稱", 
+                    "114原住民外加名額", 
+                    "114正取人數", 
+                    "113原住民外加名額", 
+                    "113正取人數"
+                ];
+                
+                const colIndices = [];
+                // Find indices
+                colNames.forEach(name => {
+                    const trimmedName = name.trim();
+                    const index = allHeaders.findIndex(header => 
+                        (header === null || header === undefined) ? false : header.trim() === trimmedName
+                    );
+                    colIndices.push(index);
+                });
+
                 const previewRows = allDataRows.slice(0, 12);
+                
                 let html = '<table class="w-full text-left border-collapse">';
                 html += '<thead><tr>';
-                previewHeaders.forEach(header => {
+                colNames.forEach(header => {
                     html += `<th>${header}</th>`;
                 });
                 html += '</tr></thead>';
                 html += '<tbody>';
                 previewRows.forEach(row => {
                     html += '<tr>';
-                    for (let i = 1; i <= 8; i++) {
-                        const cellData = (row[i] === null || row[i] === undefined) ? '' : row[i];
+                    colIndices.forEach(idx => {
+                        // Handle missing columns (-1) gracefully
+                        let cellData = '';
+                        if (idx !== -1) {
+                             cellData = (row[idx] === null || row[idx] === undefined) ? '' : row[idx];
+                        }
                         html += `<td>${cellData}</td>`;
-                    }
+                    });
                     html += '</tr>';
                 });
                 html += '</tbody></table>';
@@ -2576,4 +2597,3 @@
 
 </body>
 </html>
-```
